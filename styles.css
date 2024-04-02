@@ -82,7 +82,7 @@ li{
 
 .banner{
     display: flex;
-    height: 100vh;
+    height: 80vh;
 }
 
 img{
@@ -97,6 +97,64 @@ h2{
     color: white;
     font-weight: normal;
     font-size: 36px;
+    text-shadow: 2px 2px 8px #000000;
+    font-weight: 500;
+}
+
+.banner-middle{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ticket-widget{
+    display: flex;
+    border-radius: 8px;
+    background-color: white;
+    padding: 16px;
+    width: 70%;
+    min-height: 100px;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-row{
+    display: flex;
+    border-radius: 8px;
+    width: 100%;
+    height: 70px;
+    border: solid 1px rgb(175, 210, 255);
+    gap: 0;
 
 }
 
+.info{
+    border: solid 1px rgb(175, 210, 255);
+    width: 25%;
+}
+
+#start-point{
+    border-radius: 8px 0 0 8px;
+}
+
+#end-date{
+    border-radius: 0 8px 8px 0;
+}
+
+.search-button{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    gap: 15px;
+}
+
+#search-button{
+    width: 100%;
+    background-color: rgb(255, 211, 51);
+    color: black;
+    font-size: 18px;
+    justify-content: center;
+}
