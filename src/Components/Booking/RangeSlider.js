@@ -4,6 +4,9 @@ import Slider from "@mui/material/Slider";
 
 export default function RangeSlider({ min, max, step, formatLabel,handleChange }) {
   const [value, setValue] = React.useState([min, max]);
+  React.useEffect(()=>{
+    setValue([min, max])
+  },[])
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -16,7 +19,8 @@ export default function RangeSlider({ min, max, step, formatLabel,handleChange }
       <Slider
         getAriaLabel={() => "Hour range"}
         value={value}
-        onChange={handleSliderChange}
+        onChange={()=>{handleSliderChange()
+        console.log(value)}}
         valueLabelDisplay="auto"
         valueLabelFormat={formatLabel}
         min={min}

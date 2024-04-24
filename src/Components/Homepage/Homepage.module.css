@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp);
+
 body {
     margin: 0;
     /* overflow: hidden; */
@@ -21,10 +23,10 @@ body {
     box-sizing: border-box;
     line-height: 1.5;
     font-weight: 700;
-
+    max-height: 90px;
 }
 
-.header-right {
+.headerRight {
     display: flex;
     justify-content: flex-end;
     gap: 24px;
@@ -52,6 +54,7 @@ li {
     padding: 10px 0px 10px 15px;
     color: rgb(13, 46, 89);
     text-align: center;
+    height: 44px;
 }
 
 .buttons span {
@@ -76,7 +79,7 @@ li {
     right: 0;
 }
 
-.sign-in-button {
+.signInButton {
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -88,7 +91,7 @@ li {
     height: 80vh;
 }
 
-.banner-background {
+.bannerBackground {
     position: absolute;
     object-fit: cover;
     width: 100%;
@@ -104,7 +107,7 @@ h2 {
     font-weight: 500;
 }
 
-.banner-middle {
+.bannerMiddle {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -112,7 +115,7 @@ h2 {
     flex-direction: column;
 }
 
-.ticket-widget {
+.ticketWidget {
     display: flex;
     border-radius: 8px;
     background-color: white;
@@ -123,7 +126,7 @@ h2 {
     gap: 15px;
 }
 
-.info-row {
+.infoRow {
     display: flex;
     border-radius: 8px;
     width: 100%;
@@ -138,15 +141,15 @@ h2 {
     width: 25%;
 }
 
-#start-point {
+#startPoint {
     border-radius: 8px 0 0 8px;
 }
 
-#end-date {
+#endDate {
     border-radius: 0 8px 8px 0;
 }
 
-.search-button {
+.searchButton {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -154,7 +157,7 @@ h2 {
     gap: 15px;
 }
 
-#search-button {
+#searchButton {
     width: 100%;
     background-color: rgb(255, 211, 51);
     color: black;
@@ -174,7 +177,7 @@ h2 {
     width: 100%;
 }
 
-.end-items {
+.endItems {
     top: 0;
     width: 100%;
     display: flex;
@@ -190,7 +193,7 @@ h2 {
     gap: 10px;
 }
 
-.item-img {
+.itemImg {
     width: 24px;
     height: 24px;
     display: flex;
@@ -199,4 +202,69 @@ h2 {
 .title {
     color: white;
     font-weight: 500;
+}
+
+.selectStartPoint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+}
+
+.selectEndPoint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+}
+
+.inputPointContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.titlePoint {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgb(168, 168, 168);
+}
+
+.inputPoint {
+    border: 0;
+    font-size: 16px;
+    font-weight: 500;
+    width: 150px;
+    padding: 0;
+}
+
+.inputPoint:focus {
+    outline: none;
+}
+
+.switchButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: lightgray;
+    margin-left: 16.35%;
+    top: 382px;
+}
+
+.switchIcon {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    transform: rotate(90deg)
+}
+
+.material-icons-outlined {
+    font-size: 20px !important;
 }
