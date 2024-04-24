@@ -7,7 +7,11 @@ import axios from 'axios';
 
 
 const Booking = () => {
-    // const province = axios.get("http://localhost:4000/api/province")
+    // const token = sessionStorage.getItem('token');
+    // const headers = {
+    //     Authorization: `Bearer ${token}`,
+    // };
+    // const province = axios.get("http://localhost:4000/api/province",{ headers: headers })
     // console.log(province);
 
     const [sortOption, setSortOption] = useState('default'); 

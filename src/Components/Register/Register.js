@@ -10,9 +10,9 @@ const Register = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [user, setUserDetails] = useState({
-    fname: "",
-    lname: "",
+    name: "",
     email: "",
+    phoneNumber: "",
     password: "",
     cpassword: "",
   });
@@ -28,12 +28,10 @@ const Register = () => {
   const validateForm = (values) => {
     const error = {};
     const regex = /^[^\s+@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.fname) {
+    if (!values.name) {
       error.fname = "First Name is required";
     }
-    if (!values.lname) {
-      error.lname = "Last Name is required";
-    }
+    
     if (!values.email) {
       error.email = "Email is required";
     } else if (!regex.test(values.email)) {
@@ -65,7 +63,7 @@ const Register = () => {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
-      axios.post("http://localhost:9002/signup/", user).then((res) => {
+      axios.post("http://localhost:4000/api/user/register", user).then((res) => {
         alert(res.data.message);
         navigate("/login", { replace: true });
       });
@@ -77,24 +75,25 @@ const Register = () => {
       <div className={registerstyle.register}>
         <form>
           <h1>Create your account</h1>
+          
           <input
             type="text"
-            name="fname"
-            id="fname"
-            placeholder="First Name"
+            name="name"
+            id="name"
+            placeholder="Name"
             onChange={changeHandler}
-            value={user.fname}
+            value={user.name}
           />
-          <p className={basestyle.error}>{formErrors.fname}</p>
+          <p className={basestyle.error}>{formErrors.name}</p>
           <input
             type="text"
-            name="lname"
-            id="lname"
-            placeholder="Last Name"
+            name="phoneNumber"
+            id="phone"
+            placeholder="Phone Number"
             onChange={changeHandler}
-            value={user.lname}
+            value={user.phoneNumber}
           />
-          <p className={basestyle.error}>{formErrors.lname}</p>
+          <p className={basestyle.error}>{formErrors.phoneNumber}</p>
           <input
             type="email"
             name="email"
