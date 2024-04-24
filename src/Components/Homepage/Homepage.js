@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './Homepage.module.css';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link, useNavigate} from 'react-router-dom';
+import Enddate from './Enddate';
 
 
 const Homepage = () => {
@@ -10,7 +10,6 @@ const Homepage = () => {
   // const handleLoginButtonClick = () => {
   //   navigate('/login');
   // };
-
 
   return (
     <div>
@@ -27,7 +26,7 @@ const Homepage = () => {
               <span></span>
             </button>
             <Link to='/login'>
-              <button className={styles.buttons} /*onClick={handleLoginButtonClick}*/>
+              <button className={styles.buttons}>
                 Đăng nhập
                 <span></span>
               </button>
@@ -88,14 +87,16 @@ const Homepage = () => {
                   </div>
               </div>
               <div className={styles.info} id={styles.endDate}>
-   
+                <Enddate></Enddate>
               </div>
             </div>
             <div className={styles.searchButton}>
-              <button className={styles.buttons} id={styles.searchButton}>
-                Tìm kiếm chuyến xe ngay
-                <span></span>
-              </button>
+              <Link to='/booking' style={{width: "100%"}}>
+                <button className={styles.buttons} id={styles.searchButton}>
+                  Tìm kiếm chuyến xe ngay
+                  <span></span>
+                </button>
+              </Link>
             </div>
           </div>
         </div>
