@@ -4,6 +4,7 @@ import SortOptions from './SortOptions';
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import axios from 'axios';
+import test from './test';
 
 
 const Booking = () => {
@@ -24,8 +25,7 @@ const Booking = () => {
     const [currentImage3,setCurrentImage3] = useState('image1');
 
     // Thêm state để lưu trữ danh sách các nhà xe được chọn
-const [selectedNhaXe, setSelectedNhaXe] = useState([]);
-
+    const [selectedNhaXe, setSelectedNhaXe] = useState([]);
 
     const toggleSlider1 = () => {
         setshowSlider1(prevState => !prevState);
@@ -73,11 +73,17 @@ const [selectedNhaXe, setSelectedNhaXe] = useState([]);
 
 
     const bookings = [
-        { id: 1, departureTime: "9:45", arrivalTime: "12:20", price: 50, rating: 3 , nhaXe: 'peo1'},
-        { id: 2, departureTime: "12:15", arrivalTime: "14:30", price: 60, rating: 1 , nhaXe: 'peo2'},
-        { id: 3, departureTime: "15:00", arrivalTime: "17:45", price: 70, rating: 5, nhaXe: 'peo3' },
-        { id: 4, departureTime: "16:30", arrivalTime: "19:40", price: 90, rating: 4, nhaXe: 'peo4' }
+        { id: 1, departureTime: "9:45", arrivalTime: "12:20", price: 50, rating: 3 , nhaXe: 'peo1',totalSeat: 7},
+        { id: 2, departureTime: "12:15", arrivalTime: "14:30", price: 60, rating: 1 , nhaXe: 'peo2',totalSeat: 9},
+        { id: 3, departureTime: "15:00", arrivalTime: "17:45", price: 70, rating: 5, nhaXe: 'peo3',totalSeat:11 },
+        { id: 4, departureTime: "16:30", arrivalTime: "19:40", price: 90, rating: 4, nhaXe: 'peo4', totalSeat:13 }
     ];
+    const orderedSeatList = [
+        {id: 1, orderedSeat: 0},
+        {id: 2, orderedSeat: 0},
+        {id: 3, orderedSeat: 0},
+        {id: 4, orderedSeat: 0}
+    ]
 
     
 
@@ -162,8 +168,25 @@ const filterBookings = (timeRange, priceRange) => {
     
     const filtered2 = filterByNhaXe(filtered1,selectedNhaXe);
     const finallist = sortBookings(sortOption, filtered2)
-    setFilteredAndSortedBookings(finallist); // Cập nhật danh sách đặt phòng đã lọc
+    setFilteredAndSortedBookings(finallist); 
 };
+
+
+    const [showMessage, setShowMessage] = useState(null);// State quản lý div chọn chuyến
+    const [currentBookingPrice, setCurrentBookingPrice] = useState(null); 
+
+
+    const handleBookTicket = (event, booking,id) => {
+        event.preventDefault();
+        console.log('Booking được chọn:', booking);
+        setShowMessage(id);
+        setCurrentBookingPrice(booking.price);
+
+    };
+
+    const handleSeat = () => {
+        console.log(currentBookingPrice)
+    }
 
 
  
@@ -253,6 +276,17 @@ const filterBookings = (timeRange, priceRange) => {
                             <strong>Giá vé:</strong> ${booking.price} <br />
                             <strong>Đánh giá:</strong> {booking.rating} sao <br />
                             <strong>Nhà xe:</strong> {booking.nhaXe} <br />
+                            <div key={booking.id}>
+                                <button onClick={(event) => handleBookTicket(event, booking,booking.id)}>Chọn chuyến</button>
+                                    {showMessage === booking.id && (
+                                        <div>
+                                        {[...Array(booking.totalSeat)].map((_, index) => (
+                                            <img key={index} src='https://cdn.iconscout.com/icon/premium/png-256-thumb/car-seat-1616720-1372229.png' className='seat' onClick={handleSeat} />
+                                        ))}
+                                    </div>
+                                    )}
+                            </div>
+                            
                         </li>
                     ))}
                 </ul>
