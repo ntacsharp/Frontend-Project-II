@@ -2,3 +2,13 @@
     height: 50px;
     width: 50px;
 }
+
+.box {
+    display: inline-block;
+    margin-right: 10px;
+    position: absolute;
+}
+
+.right {
+    margin-left: 400px;
+}

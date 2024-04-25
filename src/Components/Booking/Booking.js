@@ -239,102 +239,106 @@ const Booking = () => {
 
   return (
     <div>
-      <SortOptions
-        sortOption={sortOption}
-        handleSortChange={handleSortChange}
-      />
-      <div>
-        <h1>Lọc</h1>
+      <div className="box left">
         <div>
+          <SortOptions
+            sortOption={sortOption}
+            handleSortChange={handleSortChange}
+          />
+        </div>
+        <div>
+          <h1>Lọc</h1>
           <div>
-            <p>Giờ đi</p>
             <div>
+              <p>Giờ đi</p>
+              <div>
+                <img
+                  src={
+                    currentImage1 === "image1"
+                      ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ic_keyboard_arrow_down_48px.svg/768px-Ic_keyboard_arrow_down_48px.svg.png"
+                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ic_keyboard_arrow_up_48px.svg/768px-Ic_keyboard_arrow_up_48px.svg.png"
+                  }
+                  alt="Toggle Image"
+                  onClick={handleClick1} // Sử dụng handleClick khi ảnh được click
+                  className="arrow"
+                  style={{ height: "25px", width: "25px" }}
+                />
+                {/* Hiển thị slider nếu showSlider1 là true */}
+                {showSlider1 && (
+                  <Box sx={{ width: 300 }}>
+                    <Slider
+                      getAriaLabel={() => "Time range"}
+                      value={timeVal}
+                      min={0}
+                      max={24}
+                      onChange={handleChange1}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(timeVal) => `${timeVal}:00`}
+                    />
+                  </Box>
+                )}
+              </div>
+            </div>
+            <div>
+              <p>Giá vé</p>
               <img
                 src={
-                  currentImage1 === "image1"
+                  currentImage2 === "image1"
                     ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ic_keyboard_arrow_down_48px.svg/768px-Ic_keyboard_arrow_down_48px.svg.png"
                     : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ic_keyboard_arrow_up_48px.svg/768px-Ic_keyboard_arrow_up_48px.svg.png"
                 }
                 alt="Toggle Image"
-                onClick={handleClick1} // Sử dụng handleClick khi ảnh được click
+                onClick={handleClick2} // Sử dụng handleClick khi ảnh được click
                 className="arrow"
                 style={{ height: "25px", width: "25px" }}
               />
-              {/* Hiển thị slider nếu showSlider1 là true */}
-              {showSlider1 && (
+              {showSlider2 && (
                 <Box sx={{ width: 300 }}>
                   <Slider
-                    getAriaLabel={() => "Time range"}
-                    value={timeVal}
+                    getAriaLabel={() => "Price range"}
+                    value={priceVal}
                     min={0}
-                    max={24}
-                    onChange={handleChange1}
+                    max={100}
+                    step={10}
+                    onChange={handleChange2}
                     valueLabelDisplay="auto"
-                    valueLabelFormat={(timeVal) => `${timeVal}:00`}
                   />
                 </Box>
               )}
             </div>
-          </div>
-          <div>
-            <p>Giá vé</p>
-            <img
-              src={
-                currentImage2 === "image1"
-                  ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ic_keyboard_arrow_down_48px.svg/768px-Ic_keyboard_arrow_down_48px.svg.png"
-                  : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ic_keyboard_arrow_up_48px.svg/768px-Ic_keyboard_arrow_up_48px.svg.png"
-              }
-              alt="Toggle Image"
-              onClick={handleClick2} // Sử dụng handleClick khi ảnh được click
-              className="arrow"
-              style={{ height: "25px", width: "25px" }}
-            />
-            {showSlider2 && (
-              <Box sx={{ width: 300 }}>
-                <Slider
-                  getAriaLabel={() => "Price range"}
-                  value={priceVal}
-                  min={0}
-                  max={100}
-                  step={10}
-                  onChange={handleChange2}
-                  valueLabelDisplay="auto"
-                />
-              </Box>
-            )}
-          </div>
-          <div>
-            <p>Nhà xe</p>
-            <img
-              src={
-                currentImage3 === "image1"
-                  ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ic_keyboard_arrow_down_48px.svg/768px-Ic_keyboard_arrow_down_48px.svg.png"
-                  : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ic_keyboard_arrow_up_48px.svg/768px-Ic_keyboard_arrow_up_48px.svg.png"
-              }
-              alt="Toggle Image"
-              onClick={handleClick3} // Sử dụng handleClick khi ảnh được click
-              className="arrow"
-              style={{ height: "25px", width: "25px" }}
-            />
-            {showCheckbox &&
-              bookings.map((booking) => (
-                <div>
-                  <label key={booking.id}>
-                    <input
-                      type="checkbox"
-                      value={booking.nhaXe}
-                      onChange={handleNhaXeChange}
-                      checked={selectedNhaXe.includes(booking.nhaXe)}
-                    />
-                    {booking.nhaXe}
-                  </label>
-                  <br />
-                </div>
-              ))}
+            <div>
+              <p>Nhà xe</p>
+              <img
+                src={
+                  currentImage3 === "image1"
+                    ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ic_keyboard_arrow_down_48px.svg/768px-Ic_keyboard_arrow_down_48px.svg.png"
+                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ic_keyboard_arrow_up_48px.svg/768px-Ic_keyboard_arrow_up_48px.svg.png"
+                }
+                alt="Toggle Image"
+                onClick={handleClick3} // Sử dụng handleClick khi ảnh được click
+                className="arrow"
+                style={{ height: "25px", width: "25px" }}
+              />
+              {showCheckbox &&
+                bookings.map((booking) => (
+                  <div>
+                    <label key={booking.id}>
+                      <input
+                        type="checkbox"
+                        value={booking.nhaXe}
+                        onChange={handleNhaXeChange}
+                        checked={selectedNhaXe.includes(booking.nhaXe)}
+                      />
+                      {booking.nhaXe}
+                    </label>
+                    <br />
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       </div>
-      <div>
+      <div className="box right">
         <h1>Danh sách chuyến đi</h1>
         <div id="booking">
           <ul>
