@@ -1,0 +1,1 @@
+export const signUpAPI = 'http://localhost:8080/identity/users/dangky'

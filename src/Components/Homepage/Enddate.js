@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Homepage.module.css'
 
 function Enddate() {
-  const [showEnddate, setShowEnddate] = useState(false);
+  const [showEnddate, setShowEnddate] = useState(true);
 
   const buttonStyle = showEnddate ? styles.buttonEnddateShow : styles.buttonEnddateHidden
   const buttonContent = showEnddate ? "+ Thêm ngày về" : "×"

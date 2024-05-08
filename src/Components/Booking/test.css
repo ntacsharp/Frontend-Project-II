@@ -1,0 +1,45 @@
+.seat {
+    height: 50px;
+    width: 50px;
+}
+
+.box {
+    display: inline-block;
+    margin-right: 10px;
+    position: absolute;
+}
+
+.right {
+    margin-left: 400px;
+}
+
+.button {
+    background-color: #ffd333;
+    border: none;
+    border-radius: 5%;
+    color: #484848;
+}
+
+.background {
+    background-color: #f2f2f2;
+}
+
+.sapxep {
+    background-color: white;
+    height: 274px;
+    width: 266px;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    border-radius: 5%;
+    margin-left: 10px;
+}
+
+.loc {
+    background-color: white;
+    height: 300px;
+    width: 266px;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    border-radius: 5%;
+    margin-left: 10px;
+}

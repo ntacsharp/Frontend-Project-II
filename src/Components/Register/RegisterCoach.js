@@ -5,11 +5,11 @@ import axios from "axios";
 
 import { useNavigate, NavLink } from "react-router-dom";
 
-const Register = () => {
+const RegisterCoach = () => {
   const navigate = useNavigate();
 
   const [formErrors, setFormErrors] = useState({});
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [user, setUserDetails] = useState({
     name: "",
     email: "",
@@ -20,7 +20,7 @@ const Register = () => {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
-  };
+}
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -55,8 +55,9 @@ const Register = () => {
     }
 
     if (user.password !== confirmPassword) {
-      errors.confirmPassword = "Confirmpassword and password must be the same";
+        errors.confirmPassword = "Confirmpassword and password must be the same"
     }
+
 
     return errors;
   };
@@ -67,10 +68,9 @@ const Register = () => {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      axios
-        .post("http://localhost:8080/identity/users/dangky", user)
+      axios.post("http://localhost:8080/identity/users/dangky", user)
         .then((res) => {
-          alert("Tạo tài khoản thành công");
+          alert('Tạo tài khoản thành công');
           navigate("/login", { replace: true });
         })
         .catch((error) => {
@@ -85,7 +85,7 @@ const Register = () => {
       <div className={registerstyle.register}>
         <form>
           <h1>Create your account</h1>
-
+          
           <input
             type="text"
             name="name"
@@ -140,14 +140,14 @@ const Register = () => {
             value={confirmPassword}
           />
           <p className={basestyle.error}>{formErrors.confirmPassword}</p>
-          <button className={basestyle.button_common} onClick={signupHandler}>
+          <button className={basestyle.button_common} onClick={signupHandler} style={{backgroundColor: "#1890ff"}}>
             Register
           </button>
         </form>
-        <NavLink to="/login">Already registered? Login</NavLink>
+        <NavLink to="/logincoach">Already registered? Login</NavLink>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default RegisterCoach;

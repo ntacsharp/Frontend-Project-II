@@ -2,7 +2,6 @@
 
 body {
     margin: 0;
-    overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
     height: 100vh;
     display: flex;
@@ -254,12 +253,12 @@ h2 {
     height: 36px;
     border-radius: 20px;
     background-color: rgb(232, 232, 232);
-    margin-left: 16.2%;
-    top: 381px;
     transition: background-color 0.5s ease;
+    top: 25%;
+    left: 93.5%;
 }
 
-.switchButton:hover{
+.switchButton:hover {
     background-color: rgb(220, 220, 220);
 }
 
@@ -267,14 +266,15 @@ h2 {
     display: flex;
     justify-content: center;
     align-self: center;
-    transform: rotate(90deg)
+    transform: rotate(90deg);
+    cursor: pointer;
 }
 
 .material-icons-outlined {
     font-size: 20px !important;
 }
 
-.buttonEnddateShow{
+.buttonEnddateShow {
     z-index: 5;
     display: flex;
     justify-content: center;
@@ -290,11 +290,11 @@ h2 {
     transition: background-color 0.5s ease;
 }
 
-.buttonEnddateShow:hover{
+.buttonEnddateShow:hover {
     background-color: rgb(240, 240, 252);
 }
 
-.buttonEnddateHidden{
+.buttonEnddateHidden {
     z-index: 5;
     position: absolute;
     margin-left: 15%;
@@ -311,6 +311,6 @@ h2 {
     transition: background-color 0.5s ease;
 }
 
-.buttonEnddateHidden:hover{
+.buttonEnddateHidden:hover {
     background-color: rgb(232, 232, 232);
 }

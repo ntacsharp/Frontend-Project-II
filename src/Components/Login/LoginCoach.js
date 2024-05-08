@@ -3,12 +3,13 @@ import basestyle from "../Base.module.css";
 import loginstyle from "./Login.module.css";
 import axios from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
-const Login = () => {
+const LoginCoach = () => {
+  
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [user, setUserDetails] = useState({
-    account: "",
+    userName: "",
     password: "",
   });
 
@@ -22,10 +23,11 @@ const Login = () => {
   const validateForm = (values) => {
     const error = {};
     const regex = /^[^\s+@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.account) {
-      error.account = "Account is required";
+    if (!values.userName) {
+      error.userName = "Email is required";
+    } else if (!regex.test(values.userName)) {
+      error.userName = "Please enter a valid email address";
     }
-
     if (!values.password) {
       error.password = "Password is required";
     }
@@ -37,41 +39,35 @@ const Login = () => {
     setFormErrors(validateForm(user));
     setIsSubmit(true);
     // if (!formErrors) {
-    console.log(formErrors);
+    console.log(formErrors)
     // }
   };
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
-      axios
-        .post("http://localhost:8080/identity/users/dangnhap", user)
-        .then((res) => {
-          alert("Dang nhap thanh cong!");
-          if (typeof window !== "undefined")
-            localStorage.setItem("token", res.data);
-          navigate("/Homepage", { replace: true });
-        });
-      // if (typeof window !== "undefined")
-      //   localStorage.setItem("token", 'da dang nhap');
-      // navigate("/Homepage", { replace: true });
+      axios.post("http://localhost:4000/api/user/login", user).then((res) => {
+        alert(res.data.message);
+        if (typeof window !== 'undefined') sessionStorage.setItem('token', res.data.token);
+        navigate("/", { replace: true });
+      });
     }
   }, [formErrors]);
-
+  
   return (
     <div className={loginstyle.container}>
       <div className={loginstyle.login}>
         <form>
-          <h1>Login</h1>
+          <h1>Login as Coach</h1>
           <input
-            type="text"
-            name="account"
-            id="account"
-            placeholder="Account"
+            type="userName"
+            name="userName"
+            id="userName"
+            placeholder="Email or PhoneNumber"
             onChange={changeHandler}
-            value={user.account}
+            value={user.userName}
           />
-          <p className={basestyle.error}>{formErrors.account}</p>
+          <p className={basestyle.error}>{formErrors.userName}</p>
           <input
             type="password"
             name="password"
@@ -81,13 +77,13 @@ const Login = () => {
             value={user.password}
           />
           <p className={basestyle.error}>{formErrors.password}</p>
-          <button className={basestyle.button_common} onClick={loginHandler}>
+          <button className={basestyle.button_common} onClick={loginHandler} style={{backgroundColor: "#1890ff"}}>
             Login
           </button>
         </form>
-        <NavLink to="/signup">Not yet registered ? Register Now</NavLink>
+        <NavLink to="/registercoach">Not yet registered ? Register Now</NavLink>
       </div>
     </div>
   );
 };
-export default Login;
+export default LoginCoach;
