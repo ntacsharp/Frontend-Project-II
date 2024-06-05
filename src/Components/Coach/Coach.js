@@ -19,7 +19,7 @@ const Coach = () => {
 
   const [buttonPopup, setButtonPopup] = useState(false);
   const [carButtonPopup, setCarButtonPopup] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [provinces, setProvinces] = useState([]);
 
   const [carInfo, setCarInfo] = useState({
     licenseplate: "",
@@ -29,32 +29,37 @@ const Coach = () => {
   const [car, setCar] = useState([]);
 
   const [tripInfo, setTripInfo] = useState({
-    starttime: "",
-    endtime: "",
-    startprovince: {
-      pid: "",
-      pid: "",
-      pname: "",
-    },
-    endprovince: {
-      pid: "",
-      pid: "",
-      pname: "",
-    },
-    coach: {
-      licenseplate: "",
-    },
+    busTypeId: "",
+    stopPoint: [
+      {
+        stopPointId: "",
+        time: ""
+      },
+      {
+        stopPointId: "",
+        time: ""
+      }
+    ],
+    utilities: [ 
+    ]
   });
+
   const [trip, setTrip] = useState([]);
 
   const carTypeOptions = ["Xe 24 chỗ", "Xe 29 chỗ", "Xe 35 chỗ", "Xe 45 chỗ"];
+
+
+  const [stopPoints, setStopPoints] = useState([{}])
+
+  console.log(stopPoints.length);
+
 
   const token = sessionStorage.getItem("token");
 
   async function getAdminInfo() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/identity/api/admin/token/${token}`
+        `API Get Coach`
       );
       const data = response.data;
       console.log(data);
@@ -75,7 +80,7 @@ const Coach = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/identity/api/coach/${token}`)
+      .get(`API Get Cars`)
       .then((response) => {
         console.log(">>>>>>>>data", response.data);
         setCar(response.data);
@@ -87,7 +92,7 @@ const Coach = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/identity/api/admin/tripseattoken/${token}`)
+      .get(`API Get Trip`)
       .then((response) => {
         console.log(response.data);
         setTrip(response.data);
@@ -99,39 +104,52 @@ const Coach = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/identity/api/admin/province")
+      .get("http://localhost:4000/api/province")
       .then((response) => {
-        console.log(response.data);
-        setOptions(response.data);
+        setProvinces(response.data.items);
       })
       .catch((error) => {
         console.error("Error fetching options:", error);
       });
   }, []);
 
+  console.log(provinces);
+
   const handleStartProvinceChange = (e) => {
-    const selectedOption = options.find(
-      (option) => option.pname === e.target.value
+    const selectedOption = provinces.find(
+      (option) => option._id === e.target.value
     );
+
+    const currentStopPoint = tripInfo.stopPoint || [];
+
+    const updatedStopPoint = [...currentStopPoint];
+
+    updatedStopPoint[0] = {
+      stopPointId: e.target.value,
+    };
+
     setTripInfo((prevTripInfo) => ({
       ...prevTripInfo,
-      startprovince: {
-        pname: e.target.value,
-        pid: selectedOption ? selectedOption.pid : "",
-      },
+      stopPoint: updatedStopPoint
     }));
   };
 
   const handleEndProvinceChange = (e) => {
-    const selectedOption = options.find(
-      (option) => option.pname === e.target.value
+    const selectedOption = provinces.find(
+      (option) => option._id === e.target.value
     );
+
+    const currentStopPoint = tripInfo.stopPoint || [];
+
+    const updatedStopPoint = [...currentStopPoint];
+
+    updatedStopPoint[updatedStopPoint.length - 1] = {
+      stopPointId: e.target.value,
+    };
+
     setTripInfo((prevTripInfo) => ({
       ...prevTripInfo,
-      endprovince: {
-        pname: e.target.value,
-        pid: selectedOption ? selectedOption.pid : "",
-      },
+      stopPoint: updatedStopPoint
     }));
   };
 
@@ -198,7 +216,7 @@ const Coach = () => {
     // var endstandardDate = convertToStandardDateFormat(enddatetimeLocal);
     console.log(tripInfo);
     axios
-      .post("http://localhost:8080/identity/api/admin/add/trip", tripInfo)
+      .post("API Post Trip", tripInfo)
       .then((res) => {
         alert("thanh cong ");
       });
@@ -206,20 +224,19 @@ const Coach = () => {
     console.log(tripInfo);
     setButtonPopup(false);
     setTripInfo({
-      starttime: "",
-      endtime: "",
-
-      startprovince: {
-        pid: "",
-        pname: "",
-      },
-      endprovince: {
-        pid: "",
-        pname: "",
-      },
-      coach: {
-        licenseplate: "",
-      },
+      busTypeId: "",
+      stopPoint: [
+        {
+          stopPointId: "",
+          time: ""
+        },
+        {
+          stopPointId: "",
+          time: ""
+        }
+      ],
+      utilities: [ 
+      ]
     });
   };
 
@@ -246,7 +263,7 @@ const Coach = () => {
   const addCar = async () => {
     console.log(carInfo);
     axios
-      .post(`http://localhost:8080/identity/api/coach/addtoken/${id}`, carInfo)
+      .post(`API Post Cars`, carInfo)
       .then((res) => {
         alert("thanh cong ");
       });
@@ -351,58 +368,107 @@ const Coach = () => {
             <form className={styles.infoBoxForm}>
               <div className={styles.places}>
                 <div className={styles.inputContainer}>
-                  <label className={styles.title}>Tên tỉnh đi*</label>
+                  <label className={styles.title}>Tỉnh xuất phát*</label>
                   <select
-                    value={tripInfo.startprovince.pname}
+                    value={tripInfo.stopPoint[0].stopPointId}
                     name="startprovince"
                     onChange={handleStartProvinceChange}
                   >
                     <option value="">Chọn tỉnh/thành phố</option>
-                    {options.map((option) => (
-                      <option key={option.pid} value={option.pname}>
-                        {option.pname}
+                    {provinces.map((option) => (
+                      <option key={option._id} value={option.name}>
+                        {option.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div className={styles.inputContainer}>
-                  <label className={styles.title}>Tên tỉnh đến*</label>
-                  <select
-                    value={tripInfo.endprovince.pname}
-                    name="endprovince"
-                    onChange={handleEndProvinceChange}
-                  >
-                    <option value="">Chọn tỉnh/thành phố</option>
-                    {options.map((option) => (
-                      <option key={option.pid} value={option.pname}>
-                        {option.pname}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.times}>
-                <div className={styles.inputContainer}>
-                  <label className={styles.title}>Thời gian đi*</label>
+                  <label className={styles.title}>Thời gian xuất phát*</label>
                   <input
                     type="datetime-local"
                     className={styles.input}
                     name="starttime"
                     onChange={handleChange}
-                    value={tripInfo.starttime}
+                    value={tripInfo.stopPoint[0].time}
                   ></input>
                 </div>
 
+              </div>
+
+
+              {stopPoints.map((singleStop, index) => (
+
+                    <div key = {index} className={styles.times}>
+
+                      <div className={styles.inputContainer}>
+                        <label className={styles.title}>Điểm dừng*</label>
+                        <select
+                          value={tripInfo.stopPoint[1].stopPointId}
+                          name="midprovince"
+                          onChange={handleEndProvinceChange}
+                        >
+                          <option value="">Chọn tỉnh/thành phố</option>
+                          {provinces.map((option) => (
+                            <option key={option._id} value={option.name}>
+                              {option.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className={styles.inputContainer}>
+                        <label className={styles.title}>Thời gian đến điểm dừng*</label>
+                        <input
+                          type="datetime-local"
+                          className={styles.input}
+                          name="midtime"
+                          onChange={handleChange}
+                          value={tripInfo.stopPoint[1].time}
+                        ></input>
+                      </div>
+                      
+
+                      {(stopPoints.length - 1 === index &&
+                      (<div>
+                        <button>Add a new Stop</button>
+                      </div>)
+                      )}
+
+                    </div> 
+              ))}
+
+
+
+
+
+
+              <div className={styles.times}>
+
                 <div className={styles.inputContainer}>
-                  <label className={styles.title}>Thời gian đến*</label>
+                  <label className={styles.title}>Tỉnh kết thúc*</label>
+                  <select
+                    value={tripInfo.stopPoint[1].stopPointId}
+                    name="endprovince"
+                    onChange={handleEndProvinceChange}
+                  >
+                    <option value="">Chọn tỉnh/thành phố</option>
+                    {provinces.map((option) => (
+                      <option key={option._id} value={option.name}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.inputContainer}>
+                  <label className={styles.title}>Thời gian kết thúc*</label>
                   <input
                     type="datetime-local"
                     className={styles.input}
                     name="endtime"
                     onChange={handleChange}
-                    value={tripInfo.endtime}
+                    value={tripInfo.stopPoint[1].time}
                   ></input>
                 </div>
               </div>
