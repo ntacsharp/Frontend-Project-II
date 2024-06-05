@@ -23,7 +23,7 @@ function Enddate() {
                     <label className={styles.titlePoint}>
                         Ngày về
                     </label>
-                    <input className={styles.inputPoint} value="Ngày nào đó"></input>
+                    <input className={styles.inputPoint} type='date'></input>
                 </div>
             </div>
         </div>

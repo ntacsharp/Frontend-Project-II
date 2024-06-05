@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import basestyle from "../Base.module.css";
 import registerstyle from "./Register.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const AdminRegister = () => {
   const navigate = useNavigate();
@@ -79,10 +79,11 @@ const AdminRegister = () => {
         )
         .then((response) => {
           alert("Admin registered successfully");
-          navigate("/admin/login");
+          navigate("/adminlogin");
         })
         .catch((error) => {
           console.error("Error:", error);
+          alert(error);
           // Handle error, for example, display error message
         });
     }
@@ -142,17 +143,22 @@ const AdminRegister = () => {
           />
           <p className={basestyle.error}>{formErrors.adminconfirmPassword}</p>{" "}
           <input
-            type="address"
+            type="text"
             name="adminaddress"
             placeholder="Address"
             onChange={handleInputChange}
-            value={adminCredentials.adminadress}
+            value={adminCredentials.adminaddress}
           />
-          <p className={basestyle.error}>{formErrors.adminadress}</p>
-          <button className={basestyle.button_common} type="submit">
+          <p className={basestyle.error}>{formErrors.adminaddress}</p>
+          <button
+            className={basestyle.button_common}
+            type="submit"
+            onClick={handleSubmit}
+          >
             Register
           </button>
         </form>
+        <NavLink to="/adminlogin">Already registered? Login</NavLink>
       </div>
     </div>
   );

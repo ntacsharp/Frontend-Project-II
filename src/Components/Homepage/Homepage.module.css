@@ -259,7 +259,6 @@ h2 {
 }
 
 .switchButton:hover {
-.switchButton:hover {
     background-color: rgb(220, 220, 220);
 }
 
@@ -275,7 +274,6 @@ h2 {
     font-size: 20px !important;
 }
 
-.buttonEnddateShow {
 .buttonEnddateShow {
     z-index: 5;
     display: flex;
@@ -293,11 +291,9 @@ h2 {
 }
 
 .buttonEnddateShow:hover {
-.buttonEnddateShow:hover {
     background-color: rgb(240, 240, 252);
 }
 
-.buttonEnddateHidden {
 .buttonEnddateHidden {
     z-index: 5;
     position: absolute;
@@ -316,6 +312,153 @@ h2 {
 }
 
 .buttonEnddateHidden:hover {
-.buttonEnddateHidden:hover {
     background-color: rgb(232, 232, 232);
+}
+
+input[type="date"] {
+    width: 200px !important;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-weight: 500;
+    /* More styles here */
+}
+
+select{
+    appearance: none;
+}
+
+/* Switch User Info - by TAnk */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    height: 44px;
+  }
+  
+.sliderInput { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(232, 232, 232);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    background-image: url('https://lh3.googleusercontent.com/-jbWkpbQmmFE/Ye7I-x9iZcI/AAAAAAAAAyk/96V_aAkhvAgLBAf9eSG6yASfutCML1hrACNcBGAsYHQ/s0/jack3.png');
+    height: 36px;
+    width: 36px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: 36px 36px;
+  }
+  
+.sliderInput:checked + .slider {
+    background-color: #1890ff;
+  }
+  
+.sliderInput:focus + .slider {
+    box-shadow: 0 0 1px #1890ff;
+  }
+  
+.sliderInput:checked + .slider:before {
+    -webkit-transform: translateX(105px);
+    -ms-transform: translateX(105px);
+    transform: translateX(105px);
+}
+
+.slider.round {
+    border-radius: 34px;
+  }
+  
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.sliderName{
+    position: relative;
+    margin-left: 48px;
+    font-size: 18px;
+    color: rgb(13, 46, 89);
+    font-weight: 500;
+    -webkit-transition: .4s;
+    transition: .4s;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.sliderInput:checked + .slider .sliderName {
+    opacity: 0;
+}
+
+.adminSlider:before{
+    background-image: url('https://afamilycdn.com/150157425591193600/2022/2/17/16450720256641739894468-1645080500200-16450805005662136201462.jpg');
+}
+
+/* Tới đây thui */
+  
+.dropdownMenu{
+    position: absolute;
+    top: 85px;
+    right: 12px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.dropdownMenu::before{
+    position: absolute;
+    content: "";
+    top: -5px;
+    right: 20px;
+    height: 20px;
+    width: 20px;
+    background-color: white;
+    transform: rotate(45deg);
+}
+
+.dropdownMenu.active{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: .4s ease;
+}
+
+.dropdownMenu.inactive{
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: .4s ease;
+}
+
+.userInfoContainer{
+    display: flex;
+    justify-content: space-between;
+    color: rgb(13, 46, 89);
+    width: 100%;
+    font-weight: 500;
 }

@@ -36,10 +36,59 @@
 
 .loc {
     background-color: white;
-    height: 300px;
+    min-height: 300px;
     width: 266px;
     border: 1px solid #e0e0e0;
     padding: 16px;
     border-radius: 5%;
     margin-left: 10px;
+    margin-top: 10px;
+}
+
+.container {
+    background-color: white;
+    min-height: 265px;
+    width: 728px;
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.booking_img {
+    min-height: 150px;
+    width: 150px;
+}
+
+.show1,
+.show2 {
+    background-color: white;
+    width: 728px;
+    min-height: 200px;
+    display: block;
+    margin-bottom: 30px;
+
+}
+
+
+.sliderTag {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrow {
+    align-self: center;
+}
+
+.slider {
+    width: 100%;
+}
+.showrating{
+    background-color: white;
+    width: 728px;
+    min-height: 200px;
+    display: inline;
+    margin-bottom: 30px;
+}
+
+.info{
+    display: none;
 }

@@ -12,10 +12,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUserDetails] = useState({
     name: "",
-    name: "",
     email: "",
     phone: "",
-    phoneNumber: "",
     password: "",
     account: "",
   });
@@ -38,8 +36,6 @@ const Register = () => {
 
     if (!values.name) {
       errors.name = "Name is required";
-    if (!values.name) {
-      error.fname = "First Name is required";
     }
 
     if (!values.account) {
@@ -52,11 +48,6 @@ const Register = () => {
 
     if (!values.email || !regex.test(values.email)) {
       errors.email = "Valid email is required";
-    
-    if (!values.email) {
-      error.email = "Email is required";
-    } else if (!regex.test(values.email)) {
-      error.email = "This is not a valid email format!";
     }
 
     if (!values.password || values.password.length < 6) {
@@ -86,20 +77,6 @@ const Register = () => {
           console.error("Error:", error);
           // Handle error, for example, display error message
         });
-    setFormErrors(validateForm(user));
-    setIsSubmit(true);
-    // if (!formErrors) {
-    //   setIsSubmit(true);
-    // }
-  };
-
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log(user);
-      axios.post("http://localhost:4000/api/user/register", user).then((res) => {
-        alert(res.data.message);
-        navigate("/login", { replace: true });
-      });
     }
   };
 
@@ -118,35 +95,24 @@ const Register = () => {
             value={user.name}
           />
           <p className={basestyle.error}>{formErrors.name}</p>
-          
           <input
             type="text"
             name="account"
             id="account"
             placeholder="Account"
-            name="name"
-            id="name"
-            placeholder="Name"
             onChange={changeHandler}
             value={user.account}
-            value={user.name}
           />
           <p className={basestyle.error}>{formErrors.account}</p>
-          <p className={basestyle.error}>{formErrors.name}</p>
           <input
             type="text"
             name="phone"
             id="phone"
             placeholder="Phone Number"
-            name="phoneNumber"
-            id="phone"
-            placeholder="Phone Number"
             onChange={changeHandler}
             value={user.phone}
-            value={user.phoneNumber}
           />
           <p className={basestyle.error}>{formErrors.phone}</p>
-          <p className={basestyle.error}>{formErrors.phoneNumber}</p>
           <input
             type="email"
             name="email"

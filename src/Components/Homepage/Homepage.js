@@ -1,21 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Homepage.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Enddate from "./Enddate";
+import axios from "axios";
+import Account from "./Account";
 
 const Homepage = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const handleLoginButtonClick = () => {
-  //   navigate('/login');
-  // };
+  const [startPointValue, setStartPointValue] = useState();
+  const [endPointValue, setEndPointValue] = useState();
+  const [provinceOption, setProvinceOption] = useState([]);
 
-  const [startPointValue, setStartPointValue] = useState("Hà Nội");
-  const [endPointValue, setEndPointValue] = useState("TP. HCM");
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/identity/api/admin/province")
+      .then((response) => {
+        setProvinceOption(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching options:", error);
+      });
+  }, []);
+
+  const token = sessionStorage.getItem("token");
+  const [user, setUser] = useState({});
+
+  async function getUserInfo() {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/identity/users/tk/${token}`
+      );
+      const data = response.data;
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getUserInfo();
+    };
+    fetchData();
+  }, []);
 
   const handleSwitch = () => {
     setEndPointValue(startPointValue);
     setStartPointValue(endPointValue);
+  };
+
+  const handlePost = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/identity/api/admin/trip/filter",
+        {
+          tenTinhDen: endPointValue,
+          tenTinhDi: startPointValue,
+          date: date,
+        }
+      );
+      sessionStorage.setItem("filteredList", JSON.stringify(response.data));
+      navigate("/booking");
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
+  const [date, setDate] = useState("");
+
+  const handleDateChange = (event) => {
+    const selectedDate = event.target.value;
+    setDate(selectedDate);
   };
 
   return (
@@ -23,7 +79,7 @@ const Homepage = () => {
       <div className={styles.navbar}>
         <div className={styles.headerLeft}></div>
         <ul className={styles.headerRight}>
-          <Link to="/registercoach" style={{ color: "white" }}>
+          <Link to="/adminsignup" style={{ color: "white" }}>
             <li>Đăng ký mở bán vé</li>
           </Link>
           <div className={styles.signInButton}>
@@ -32,24 +88,18 @@ const Homepage = () => {
               Hotline 24/7
               <span></span>
             </button>
-            {
-              localStorage.getItem('token') ?
-                <div>
-                  <button className={styles.buttons} style={{paddingRight: "15px"}} onClick={() => {
-                    localStorage.removeItem('token');
-                    window.location.replace('/');
-                  }}>
-                    Đăng xuất
-                  
-                  </button> 
-                </div> :
-                <Link to='/login'>
-                  <button className={styles.buttons}>
-                    Đăng nhập
-                    <span></span>
-                  </button>
-                </Link>
-            }
+            {sessionStorage.getItem("token") ? (
+              <div>
+                <Account user={user}></Account>
+              </div>
+            ) : (
+              <Link to="/login">
+                <button className={styles.buttons}>
+                  Đăng nhập
+                  <span></span>
+                </button>
+              </Link>
+            )}
           </div>
         </ul>
       </div>
@@ -82,11 +132,19 @@ const Homepage = () => {
                   </div>
                   <div className={styles.inputPointContainer}>
                     <label className={styles.titlePoint}>Nơi xuất phát</label>
-                    <input
+                    <select
                       className={styles.inputPoint}
                       value={startPointValue}
-                      onChange={(e) => setStartPointValue(e.target.value)}
-                    ></input>
+                      onChange={(e) => {
+                        setStartPointValue(e.target.value);
+                      }}
+                    >
+                      {provinceOption.map((option) => (
+                        <option key={option.pid} value={option.pname}>
+                          {option.pname}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
@@ -100,11 +158,19 @@ const Homepage = () => {
                   </div>
                   <div className={styles.inputPointContainer}>
                     <label className={styles.titlePoint}>Nơi đến</label>
-                    <input
+                    <select
                       className={styles.inputPoint}
                       value={endPointValue}
-                      onChange={(e) => setEndPointValue(e.target.value)}
-                    ></input>
+                      onChange={(e) => {
+                        setEndPointValue(e.target.value);
+                      }}
+                    >
+                      {provinceOption.map((option) => (
+                        <option key={option.pid} value={option.pname}>
+                          {option.pname}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
@@ -120,7 +186,8 @@ const Homepage = () => {
                     <label className={styles.titlePoint}>Ngày đi</label>
                     <input
                       className={styles.inputPoint}
-                      value="Ngày nào đó"
+                      type="date"
+                      onChange={handleDateChange}
                     ></input>
                   </div>
                 </div>
@@ -130,12 +197,14 @@ const Homepage = () => {
               </div>
             </div>
             <div className={styles.searchButton}>
-              <Link to="/booking" style={{ width: "100%" }}>
-                <button className={styles.buttons} id={styles.searchButton}>
-                  Tìm kiếm chuyến xe ngay
-                  <span></span>
-                </button>
-              </Link>
+              <button
+                className={styles.buttons}
+                id={styles.searchButton}
+                onClick={handlePost}
+              >
+                Tìm kiếm chuyến xe ngay
+                <span></span>
+              </button>
             </div>
           </div>
         </div>

@@ -15,6 +15,7 @@ const AdminLogin = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log(adminCredentials);
     setAdminCredentials({
       ...adminCredentials,
       [name]: value,
@@ -27,8 +28,10 @@ const AdminLogin = () => {
         .post("http://localhost:8080/identity/api/admin/signin", adminCredentials)
         .then((response) => {
           alert("Admin login successful");
+          console.log(response.data);
+          sessionStorage.setItem("token", response.data);
           // Redirect to admin dashboard or other admin-specific page
-          navigate("/admin/dashboard");
+          navigate("/coach");
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -62,7 +65,7 @@ const AdminLogin = () => {
 
             {error && <p className={basestyle.error}>{error}</p>}
 
-            <button className={basestyle.button_common} type="submit">
+            <button className={basestyle.button_common} type="submit" onClick={handleSubmit}>
               Login
             </button>
           </form>
