@@ -259,6 +259,7 @@ h2 {
 }
 
 .switchButton:hover {
+.switchButton:hover {
     background-color: rgb(220, 220, 220);
 }
 
@@ -274,6 +275,7 @@ h2 {
     font-size: 20px !important;
 }
 
+.buttonEnddateShow {
 .buttonEnddateShow {
     z-index: 5;
     display: flex;
@@ -291,9 +293,11 @@ h2 {
 }
 
 .buttonEnddateShow:hover {
+.buttonEnddateShow:hover {
     background-color: rgb(240, 240, 252);
 }
 
+.buttonEnddateHidden {
 .buttonEnddateHidden {
     z-index: 5;
     position: absolute;
@@ -311,6 +315,7 @@ h2 {
     transition: background-color 0.5s ease;
 }
 
+.buttonEnddateHidden:hover {
 .buttonEnddateHidden:hover {
     background-color: rgb(232, 232, 232);
 }

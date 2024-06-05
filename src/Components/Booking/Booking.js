@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./test.css";
 import SortOptions from "./SortOptions";
+import React, { useEffect, useState } from "react";
+import "./test.css";
+import SortOptions from "./SortOptions";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 const Booking = () => {
+  // const token = sessionStorage.getItem('token');
+  // const headers = {
+  //     Authorization: `Bearer ${token}`,
+  // };
+  // const province = axios.get("http://localhost:4000/api/province",{ headers: headers })
+  // console.log(province);
   // const token = sessionStorage.getItem('token');
   // const headers = {
   //     Authorization: `Bearer ${token}`,
@@ -24,10 +33,31 @@ const Booking = () => {
   const [currentImage2, setCurrentImage2] = useState("image1");
   const [showCheckbox, setShowCheckbox] = useState(false);
   const [currentImage3, setCurrentImage3] = useState("image1");
+  const [sortOption, setSortOption] = useState("default");
+  const [filteredAndSortedBookings, setFilteredAndSortedBookings] = useState(
+    []
+  );
+  const [showSlider1, setshowSlider1] = useState(false);
+  const [showSlider2, setshowSlider2] = useState(false);
+  const [currentImage1, setCurrentImage1] = useState("image1"); // Thêm state để theo dõi ảnh hiện tại
+  const [currentImage2, setCurrentImage2] = useState("image1");
+  const [showCheckbox, setShowCheckbox] = useState(false);
+  const [currentImage3, setCurrentImage3] = useState("image1");
 
   // Thêm state để lưu trữ danh sách các nhà xe được chọn
   const [selectedNhaXe, setSelectedNhaXe] = useState([]);
+  // Thêm state để lưu trữ danh sách các nhà xe được chọn
+  const [selectedNhaXe, setSelectedNhaXe] = useState([]);
 
+  const toggleSlider1 = () => {
+    setshowSlider1((prevState) => !prevState);
+  };
+  const toggleSlider2 = () => {
+    setshowSlider2((prevState) => !prevState);
+  };
+  const toggleCheckbox = () => {
+    setShowCheckbox((prevState) => !prevState);
+  };
   const toggleSlider1 = () => {
     setshowSlider1((prevState) => !prevState);
   };
@@ -44,7 +74,19 @@ const Booking = () => {
       prevImage === "image1" ? "image2" : "image1"
     ); // Đổi ảnh
   };
+  const handleClick1 = () => {
+    toggleSlider1(); // Khi ảnh được click, toggle slider
+    setCurrentImage1((prevImage) =>
+      prevImage === "image1" ? "image2" : "image1"
+    ); // Đổi ảnh
+  };
 
+  const handleClick2 = () => {
+    toggleSlider2(); // Khi ảnh được click, toggle slider
+    setCurrentImage2((prevImage) =>
+      prevImage === "image1" ? "image2" : "image1"
+    ); // Đổi ảnh
+  };
   const handleClick2 = () => {
     toggleSlider2(); // Khi ảnh được click, toggle slider
     setCurrentImage2((prevImage) =>
@@ -58,10 +100,32 @@ const Booking = () => {
       prevImage === "image1" ? "image2" : "image1"
     );
   };
+  const handleClick3 = () => {
+    toggleCheckbox();
+    setCurrentImage3((prevImage) =>
+      prevImage === "image1" ? "image2" : "image1"
+    );
+  };
 
   const [timeVal, setValue1] = React.useState([0, 24]);
   const [priceVal, setValue2] = React.useState([0, 100]);
+  const [timeVal, setValue1] = React.useState([0, 24]);
+  const [priceVal, setValue2] = React.useState([0, 100]);
 
+  const handleChange1 = (event, newValue) => {
+    setValue1(newValue);
+    //console.log(newValue)
+    setTimeRange(newValue);
+  };
+  const handleChange2 = (event, newValue) => {
+    setValue2(newValue);
+    //console.log(newValue)
+    setPriceRange(newValue);
+  };
+
+  useEffect(() => {
+    filterBookings(timeRange, priceVal);
+  }, [timeVal, priceVal, sortOption, selectedNhaXe]);
   const handleChange1 = (event, newValue) => {
     setValue1(newValue);
     //console.log(newValue)
@@ -115,7 +179,47 @@ const Booking = () => {
       totalSeat: 13,
     },
   ];
+  const bookings = [
+    {
+      id: 1,
+      departureTime: "9:45",
+      arrivalTime: "12:20",
+      price: 50,
+      rating: 3,
+      nhaXe: "peo1",
+      totalSeat: 7,
+    },
+    {
+      id: 2,
+      departureTime: "12:15",
+      arrivalTime: "14:30",
+      price: 60,
+      rating: 1,
+      nhaXe: "peo2",
+      totalSeat: 9,
+    },
+    {
+      id: 3,
+      departureTime: "15:00",
+      arrivalTime: "17:45",
+      price: 70,
+      rating: 5,
+      nhaXe: "peo3",
+      totalSeat: 11,
+    },
+    {
+      id: 4,
+      departureTime: "16:30",
+      arrivalTime: "19:40",
+      price: 90,
+      rating: 4,
+      nhaXe: "peo4",
+      totalSeat: 13,
+    },
+  ];
 
+  // Hàm xử lý sự kiện khi có sự thay đổi trong ô đánh dấu nhà xe
+  const handleNhaXeChange = (event) => {
   // Hàm xử lý sự kiện khi có sự thay đổi trong ô đánh dấu nhà xe
   const handleNhaXeChange = (event) => {
     const nhaXe = event.target.value;
@@ -123,24 +227,60 @@ const Booking = () => {
     if (event.target.checked) {
       // Nếu đã chọn, thêm nhà xe vào danh sách các nhà xe được chọn
       setSelectedNhaXe((prevSelected) => [...prevSelected, nhaXe]);
+      // Nếu đã chọn, thêm nhà xe vào danh sách các nhà xe được chọn
+      setSelectedNhaXe((prevSelected) => [...prevSelected, nhaXe]);
     } else {
+      // Nếu bỏ chọn, loại bỏ nhà xe khỏi danh sách các nhà xe được chọn
+      setSelectedNhaXe((prevSelected) =>
+        prevSelected.filter((item) => item !== nhaXe)
+      );
       // Nếu bỏ chọn, loại bỏ nhà xe khỏi danh sách các nhà xe được chọn
       setSelectedNhaXe((prevSelected) =>
         prevSelected.filter((item) => item !== nhaXe)
       );
     }
   };
+  };
 
+  const filterByNhaXe = (list, selectedNhaXe) => {
   const filterByNhaXe = (list, selectedNhaXe) => {
     // Nếu không có nhà xe nào được chọn, trả về toàn bộ danh sách chuyến đi
     if (selectedNhaXe.length === 0) {
       return list;
+      return list;
     } else {
+      // Lọc danh sách chuyến đi sao cho nhà xe nằm trong danh sách nhà xe được chọn
+      return list.filter((booking) => selectedNhaXe.includes(booking.nhaXe));
       // Lọc danh sách chuyến đi sao cho nhà xe nằm trong danh sách nhà xe được chọn
       return list.filter((booking) => selectedNhaXe.includes(booking.nhaXe));
     }
   };
+  };
 
+  const sortBookings = (option, list) => {
+    switch (option) {
+      case "earliest":
+        return list.slice().sort((a, b) => {
+          const timeA = parseInt(a.departureTime.replace(":", ""));
+          const timeB = parseInt(b.departureTime.replace(":", ""));
+          return timeA - timeB;
+        });
+      case "latest":
+        return list.slice().sort((a, b) => {
+          const timeA = parseInt(a.departureTime.replace(":", ""));
+          const timeB = parseInt(b.departureTime.replace(":", ""));
+          return timeB - timeA;
+        });
+      case "highest":
+        return list.slice().sort((a, b) => b.rating - a.rating);
+      case "ascending":
+        return list.slice().sort((a, b) => a.price - b.price);
+      case "descending":
+        return list.slice().sort((a, b) => b.price - a.price);
+      default:
+        return list;
+    }
+  };
   const sortBookings = (option, list) => {
     switch (option) {
       case "earliest":
@@ -169,10 +309,19 @@ const Booking = () => {
   const handleSortChange = (event) => {
     setSortOption(event.target.value);
   };
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value);
+  };
 
   const [priceRange, setPriceRange] = useState([0, 100]); // State lưu trữ khoảng giá vé
   const [timeRange, setTimeRange] = useState([0, 24]); // State lưu trữ khoảng thời gian đi
+  const [priceRange, setPriceRange] = useState([0, 100]); // State lưu trữ khoảng giá vé
+  const [timeRange, setTimeRange] = useState([0, 24]); // State lưu trữ khoảng thời gian đi
 
+  // Hàm lọc danh sách đặt phòng dựa trên cả hai tiêu chí: giờ đi và giá vé
+  const filterBookings = (timeRange, priceRange) => {
+    const filtered1 = bookings.filter((booking) => {
+      //return (priceRange[0] != priceRange[1]);
   // Hàm lọc danh sách đặt phòng dựa trên cả hai tiêu chí: giờ đi và giá vé
   const filterBookings = (timeRange, priceRange) => {
     const filtered1 = bookings.filter((booking) => {
