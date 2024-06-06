@@ -115,43 +115,43 @@ const Coach = () => {
 
   console.log(provinces);
 
-  const handleStartProvinceChange = (e) => {
+  const handleProvinceChange = (e) => {
     const selectedOption = provinces.find(
       (option) => option._id === e.target.value
     );
 
     const currentStopPoint = tripInfo.stopPoint || [];
 
-    const updatedStopPoint = [...currentStopPoint];
+    const updatedStopPoint = currentStopPoint;
 
-    updatedStopPoint[0] = {
-      stopPointId: e.target.value,
-    };
+    updatedStopPoint[0].stopPointId = selectedOption._id;
 
     setTripInfo((prevTripInfo) => ({
       ...prevTripInfo,
       stopPoint: updatedStopPoint
     }));
+
+    console.log(tripInfo);
   };
 
-  const handleEndProvinceChange = (e) => {
-    const selectedOption = provinces.find(
-      (option) => option._id === e.target.value
-    );
+  // const handleEndProvinceChange = (e) => {
+  //   const selectedOption = provinces.find(
+  //     (option) => option._id === e.target.value
+  //   );
 
-    const currentStopPoint = tripInfo.stopPoint || [];
+  //   const currentStopPoint = tripInfo.stopPoint || [];
 
-    const updatedStopPoint = [...currentStopPoint];
+  //   const updatedStopPoint = [...currentStopPoint];
 
-    updatedStopPoint[updatedStopPoint.length - 1] = {
-      stopPointId: e.target.value,
-    };
+  //   updatedStopPoint[updatedStopPoint.length - 1] = {
+  //     stopPointId: e.target.value,
+  //   };
 
-    setTripInfo((prevTripInfo) => ({
-      ...prevTripInfo,
-      stopPoint: updatedStopPoint
-    }));
-  };
+  //   setTripInfo((prevTripInfo) => ({
+  //     ...prevTripInfo,
+  //     stopPoint: updatedStopPoint
+  //   }));
+  // };
 
   const handleChange = (e) => {
     setTripInfo({ ...tripInfo, [e.target.name]: e.target.value });
@@ -366,7 +366,7 @@ const Coach = () => {
           <div className={styles.infoBoxWrapper}>
             <div className={styles.infoBoxTitle}>Thông tin chuyến xe</div>
             <form className={styles.infoBoxForm}>
-              <div className={styles.places}>
+              {/* <div className={styles.places}>
                 <div className={styles.inputContainer}>
                   <label className={styles.title}>Tỉnh xuất phát*</label>
                   <select
@@ -394,56 +394,54 @@ const Coach = () => {
                   ></input>
                 </div>
 
-              </div>
+              </div> */}
 
 
               {stopPoints.map((singleStop, index) => (
+                <>
+                      <div key = {index} className={styles.times}>
 
-                    <div key = {index} className={styles.times}>
+                        <div className={styles.inputContainer}>
+                          <label className={styles.title}>Điểm dừng*</label>
+                          <select
+                            value={tripInfo.stopPoint[0].stopPointId}
+                            name="midprovince"
+                            onChange={handleProvinceChange}
+                          >
+                            <option value="">Chọn tỉnh/thành phố</option>
+                            {provinces.map((option) => (
+                              <option key={option._id} value={option._id}>
+                                {option.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
 
-                      <div className={styles.inputContainer}>
-                        <label className={styles.title}>Điểm dừng*</label>
-                        <select
-                          value={tripInfo.stopPoint[1].stopPointId}
-                          name="midprovince"
-                          onChange={handleEndProvinceChange}
-                        >
-                          <option value="">Chọn tỉnh/thành phố</option>
-                          {provinces.map((option) => (
-                            <option key={option._id} value={option.name}>
-                              {option.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                        <div className={styles.inputContainer}>
+                          <label className={styles.title}>Thời gian đến điểm dừng*</label>
+                          <input
+                            type="datetime-local"
+                            className={styles.input}
+                            name="midtime"
+                            onChange={handleChange}
+                            value={tripInfo.stopPoint[1].time}
+                          ></input>
+                        </div>
 
-                      <div className={styles.inputContainer}>
-                        <label className={styles.title}>Thời gian đến điểm dừng*</label>
-                        <input
-                          type="datetime-local"
-                          className={styles.input}
-                          name="midtime"
-                          onChange={handleChange}
-                          value={tripInfo.stopPoint[1].time}
-                        ></input>
-                      </div>
-                      
+                      </div> 
 
-                      {(stopPoints.length - 1 === index &&
-                      (<div>
-                        <button>Add a new Stop</button>
-                      </div>)
-                      )}
+                  {(stopPoints.length - 1 === index) &&
+                    (<div>
+                      <button>Add a new Stop</button>
+                    </div>)
+                  }
+                </>
 
-                    </div> 
               ))}
 
 
 
-
-
-
-              <div className={styles.times}>
+              {/* <div className={styles.times}>
 
                 <div className={styles.inputContainer}>
                   <label className={styles.title}>Tỉnh kết thúc*</label>
@@ -471,7 +469,7 @@ const Coach = () => {
                     value={tripInfo.stopPoint[1].time}
                   ></input>
                 </div>
-              </div>
+              </div> */}
 
               <div className={styles.types}>
                 <div className={styles.inputContainer}>
