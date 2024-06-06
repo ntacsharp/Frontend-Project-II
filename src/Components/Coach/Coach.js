@@ -49,7 +49,10 @@ const Coach = () => {
   const carTypeOptions = ["Xe 24 chỗ", "Xe 29 chỗ", "Xe 35 chỗ", "Xe 45 chỗ"];
 
 
-  const [stopPoints, setStopPoints] = useState([{}])
+  const [stopPoints, setStopPoints] = useState([
+    {},
+    {}
+  ])
 
   console.log(stopPoints.length);
 
@@ -115,7 +118,7 @@ const Coach = () => {
 
   console.log(provinces);
 
-  const handleProvinceChange = (e) => {
+  const handleProvinceChange = (e, index) => {
     const selectedOption = provinces.find(
       (option) => option._id === e.target.value
     );
@@ -124,7 +127,7 @@ const Coach = () => {
 
     const updatedStopPoint = currentStopPoint;
 
-    updatedStopPoint[0].stopPointId = selectedOption._id;
+    updatedStopPoint[index].stopPointId = selectedOption._id;
 
     setTripInfo((prevTripInfo) => ({
       ...prevTripInfo,
@@ -404,9 +407,9 @@ const Coach = () => {
                         <div className={styles.inputContainer}>
                           <label className={styles.title}>Điểm dừng*</label>
                           <select
-                            value={tripInfo.stopPoint[0].stopPointId}
+                            value={tripInfo.stopPoint[index].stopPointId}
                             name="midprovince"
-                            onChange={handleProvinceChange}
+                            onChange={(e) => handleProvinceChange(e, index)}
                           >
                             <option value="">Chọn tỉnh/thành phố</option>
                             {provinces.map((option) => (
