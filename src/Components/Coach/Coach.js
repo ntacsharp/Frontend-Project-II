@@ -34,10 +34,6 @@ const Coach = () => {
       {
         stopPointId: "",
         time: ""
-      },
-      {
-        stopPointId: "",
-        time: ""
       }
     ],
     utilities: [ 
@@ -50,11 +46,22 @@ const Coach = () => {
 
 
   const [stopPoints, setStopPoints] = useState([
-    {},
     {}
   ])
 
-  console.log(stopPoints.length);
+  const handleStopAdd = () =>{
+    const newStopPoint = {
+      stopPointId: "",
+      time: ""
+    };
+
+    setTripInfo(preTripInfo => ({
+      ...preTripInfo,
+      stopPoint: [...preTripInfo.stopPoint, newStopPoint]
+    }))
+
+    setStopPoints([...stopPoints, {}])
+  }
 
 
   const token = sessionStorage.getItem("token");
@@ -427,15 +434,20 @@ const Coach = () => {
                             className={styles.input}
                             name="midtime"
                             onChange={handleChange}
-                            value={tripInfo.stopPoint[1].time}
+                            value={"một cái gì đó"}
                           ></input>
                         </div>
-
+                        
+                        {(stopPoints.length > 1) &&
+                          (<div>
+                            <button>Remove</button>
+                          </div>)
+                        }
                       </div> 
 
                   {(stopPoints.length - 1 === index) &&
                     (<div>
-                      <button>Add a new Stop</button>
+                      <button onClick={handleStopAdd}>Add a new Stop</button>
                     </div>)
                   }
                 </>
