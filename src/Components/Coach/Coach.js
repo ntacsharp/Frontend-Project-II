@@ -47,7 +47,9 @@ const Coach = () => {
 
   const [stopPoints, setStopPoints] = useState([
     {}
-  ])
+  ]);
+
+  const [stopPointList, setStopPointList] = useState([]);
 
   const handleStopAdd = () =>{
     const newStopPoint = {
@@ -123,7 +125,28 @@ const Coach = () => {
       });
   }, []);
 
-  console.log(provinces);
+  // console.log(provinces);
+
+  const data = {
+    provinceId: "66573ff15226cf218ded7b41"
+  }
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/api/province/stop_point`, 
+          data
+        
+      )
+      .then((response) => {
+        console.log(response);
+        setStopPointList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching options:", error);
+      });
+  }, []);
+
+  console.log(stopPointList);
 
   const handleProvinceChange = (e, index) => {
     const selectedOption = provinces.find(
