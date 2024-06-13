@@ -4,7 +4,6 @@ import loginstyle from "./Login.module.css";
 import axios from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 const Login = () => {
-  
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -39,7 +38,7 @@ const Login = () => {
     setFormErrors(validateForm(user));
     setIsSubmit(true);
     // if (!formErrors) {
-    console.log(formErrors)
+    console.log(formErrors);
     // }
   };
 
@@ -48,7 +47,8 @@ const Login = () => {
       console.log(user);
       axios.post("http://localhost:4000/api/user/login", user).then((res) => {
         alert(res.data.message);
-        if (typeof window !== 'undefined') sessionStorage.setItem('token', res.data.token);
+        if (typeof window !== "undefined")
+          sessionStorage.setItem("token", res.data.token);
         navigate("/", { replace: true });
       });
     }

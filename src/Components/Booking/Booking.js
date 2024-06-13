@@ -176,7 +176,7 @@ const Booking = () => {
   const filterBookings = (timeRange, priceRange) => {
     const filtered1 = bookings.filter((booking) => {
       //return (priceRange[0] != priceRange[1]);
-
+      console.log(booking.price)
       // Kiểm tra nếu giờ đi của đặt phòng nằm trong khoảng thời gian và giá vé nằm trong khoảng giá trị
       if (
         priceRange[0] !== priceRange[1] &&
@@ -198,7 +198,7 @@ const Booking = () => {
         return false;
       }
     });
-
+    console.log("check:",filtered1)
     const filtered2 = filterByNhaXe(filtered1, selectedNhaXe);
     const finallist = sortBookings(sortOption, filtered2);
     setFilteredAndSortedBookings(finallist);
