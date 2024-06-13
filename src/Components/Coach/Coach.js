@@ -26,6 +26,8 @@ const Coach = () => {
     coachtype: "Xe 24 chỗ",
     number: 24,
   });
+
+  const [carType, setCarType] = useState([]);
   const [car, setCar] = useState([]);
 
   const [tripInfo, setTripInfo] = useState({
@@ -68,10 +70,14 @@ const Coach = () => {
 
   const token = sessionStorage.getItem("token");
 
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   async function getAdminInfo() {
     try {
       const response = await axios.get(
-        `API Get Coach`
+        `http://localhost:4000/api/provider`
       );
       const data = response.data;
       console.log(data);
@@ -92,6 +98,18 @@ const Coach = () => {
 
   useEffect(() => {
     axios
+      .get(`http://localhost:4000/api/bus/types`)
+      .then((response) => {
+        console.log(response.data.items);
+        setCarType(response.data.items);
+      })
+      .catch((error) => {
+        console.error("Error fetching options:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
       .get(`API Get Cars`)
       .then((response) => {
         console.log(">>>>>>>>data", response.data);
@@ -102,17 +120,20 @@ const Coach = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(`API Get Trip`)
-      .then((response) => {
-        console.log(response.data);
-        setTrip(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching options:", error);
-      });
-  }, []);
+  //Get Trip API
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:4000/api/trip/provider`, {
+  //       headers: headers
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data.items);
+  //       setTrip(response.data.items);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching options:", error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     axios
@@ -127,26 +148,21 @@ const Coach = () => {
 
   // console.log(provinces);
 
-  const data = {
-    provinceId: "66573ff15226cf218ded7b41"
-  }
+  const currentProvince = "66573ff15226cf218ded7b41"
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/province/stop_point`, 
-          data
-        
-      )
+      .get(`http://localhost:4000/api/province/${currentProvince}/stop_point`)
       .then((response) => {
-        console.log(response);
-        setStopPointList(response.data);
+        console.log(response.data.items);
+        setStopPointList(response.data.items);
       })
       .catch((error) => {
         console.error("Error fetching options:", error);
       });
   }, []);
 
-  console.log(stopPointList);
+  // console.log(stopPointList);
 
   const handleProvinceChange = (e, index) => {
     const selectedOption = provinces.find(

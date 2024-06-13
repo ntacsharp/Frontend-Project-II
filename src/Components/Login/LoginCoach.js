@@ -46,7 +46,7 @@ const LoginCoach = () => {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
-      axios.post("http://localhost:4000/api/user/login", user).then((res) => {
+      axios.post("http://localhost:4000/api/provider/login", user).then((res) => {
         alert(res.data.message);
         if (typeof window !== 'undefined') sessionStorage.setItem('token', res.data.token);
         navigate("/", { replace: true });

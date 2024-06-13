@@ -8,8 +8,8 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const [adminCredentials, setAdminCredentials] = useState({
-    adminaccount: "",
-    adminpassword: "",
+    userName: "",
+    password: "",
   });
   const [error, setError] = useState("");
 
@@ -25,11 +25,11 @@ const AdminLogin = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-        .post("http://localhost:8080/identity/api/admin/signin", adminCredentials)
+        .post("http://localhost:4000/api/provider/login", adminCredentials)
         .then((response) => {
           alert("Admin login successful");
-          console.log(response.data);
-          sessionStorage.setItem("token", response.data);
+          console.log(response.data.token);
+          sessionStorage.setItem("token", response.data.token);
           // Redirect to admin dashboard or other admin-specific page
           navigate("/coach");
         })
@@ -47,20 +47,20 @@ const AdminLogin = () => {
 
             <input
                 type="text"
-                name="adminaccount"
+                name="userName"
                 id="adminaccount"
                 placeholder="Admin Account"
                 onChange={handleInputChange}
-                value={adminCredentials.adminaccount}
+                value={adminCredentials.userName}
             />
 
             <input
                 type="password"
-                name="adminpassword"
+                name="password"
                 id="adminpassword"
                 placeholder="Password"
                 onChange={handleInputChange}
-                value={adminCredentials.adminpassword}
+                value={adminCredentials.password}
             />
 
             {error && <p className={basestyle.error}>{error}</p>}
