@@ -1,0 +1,284 @@
+@import url(https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp);
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: #F2F2F2;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    background-color: #1890ff;
+    padding: 16px 20px;
+    color: white;
+    justify-content: space-between;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 14px;
+    box-sizing: border-box;
+    line-height: 1.5;
+    font-weight: 700;
+    max-height: 90px;
+}
+
+.headerRight {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+li {
+    display: flex;
+}
+
+.material-icons-round {
+    font-size: 20px !important;
+}
+
+.buttons {
+    background-color: aliceblue;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    border-width: 0;
+    font-weight: bold;
+    padding: 10px 0px 10px 15px;
+    color: rgb(13, 46, 89);
+    text-align: center;
+    height: 44px;
+}
+
+.buttons span {
+    cursor: pointer;
+    transition: 0.5s;
+    display: inline-block;
+}
+
+.buttons span:after {
+    content: '\00bb';
+    opacity: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.buttons:hover span {
+    padding-right: 20px;
+}
+
+.buttons:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.signInButton {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    gap: 15px;
+}
+
+.turnBack {
+    display: flex;
+    align-items: center;
+    height: 70px;
+}
+
+.turnBackButton {
+    color: rgb(36, 116, 229);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.infoBox {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    width: 600px;
+    
+}
+
+.money {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    right: 0;
+    width: 360px;
+    height: 64px;
+}
+
+.infoBoxWrapper {
+    padding: 20px;
+    height: 100%;
+}
+
+.moneyWrapper {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.infoBoxForm {
+    gap: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.infoBoxTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #202020;
+    padding-bottom: 20px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 8px;
+    padding: 8px 20px;
+}
+
+.title {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgb(168, 168, 168);
+}
+
+.input {
+    border: 0;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    padding: 0;
+}
+
+.input:focus{
+    outline: none;
+}
+
+.zone {
+    border: 0;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.trustWrapper{
+    background-color: #EEFBF4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    border: 1px solid rgb(39, 174, 96);
+    border-radius: 8px;
+    padding: 10px 12px;
+    gap: 10px;
+}
+
+.trustMessage{
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0px;
+    margin: 0px;
+}
+
+.moneyTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #202020;
+}
+
+.endbar {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    background-color: white;
+    padding: 16px 20px;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 14px;
+    box-sizing: border-box;
+    line-height: 1.5;
+    font-weight: 700;
+    flex-direction: column;
+    bottom: 0 !important;
+    position: absolute;
+    width: 100%;
+}
+
+.confirmPaymentButton{
+    width: 50vw;
+    background-color: rgb(255, 211, 51);
+    color: black;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+/* input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+} */
+
+.radioContainer{
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.radioContainer:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.radioContainer input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radioContainer input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.radioContainer .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+.radioLabel{
+    padding-left: 40px;
+}
