@@ -8,7 +8,7 @@ const Login = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [user, setUserDetails] = useState({
-    account: "",
+    userName: "",
     password: "",
   });
 
@@ -22,8 +22,8 @@ const Login = () => {
   const validateForm = (values) => {
     const error = {};
     const regex = /^[^\s+@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.account) {
-      error.account = "Account is required";
+    if (!values.userName) {
+      error.userName = "userName is required";
     }
 
     if (!values.password) {
@@ -45,11 +45,10 @@ const Login = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
       axios
-        .post("http://localhost:8080/identity/users/dangnhap", user)
+        .post("http://localhost:4000/api/user/login", user)
         .then((res) => {
-          alert("Dang nhap thanh cong!");
           if (typeof window !== "undefined")
-            localStorage.setItem("token", res.data);
+            sessionStorage.setItem("token", res.data.token);
           navigate("/Homepage", { replace: true });
         });
       // if (typeof window !== "undefined")
@@ -65,13 +64,13 @@ const Login = () => {
           <h1>Login</h1>
           <input
             type="text"
-            name="account"
-            id="account"
-            placeholder="Account"
+            name="userName"
+            id="userName"
+            placeholder="userName"
             onChange={changeHandler}
-            value={user.account}
+            value={user.userName}
           />
-          <p className={basestyle.error}>{formErrors.account}</p>
+          <p className={basestyle.error}>{formErrors.userName}</p>
           <input
             type="password"
             name="password"

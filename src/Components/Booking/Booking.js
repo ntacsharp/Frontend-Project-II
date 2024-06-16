@@ -22,9 +22,7 @@ const Booking = () => {
   // console.log(province);
 
   const [sortOption, setSortOption] = useState("default");
-  const [filteredAndSortedBookings, setFilteredAndSortedBookings] = useState(
-    []
-  );
+  const [filteredAndSortedBookings, setFilteredAndSortedBookings] = useState([]);
   const [showSlider1, setshowSlider1] = useState(false);
   const [showSlider2, setshowSlider2] = useState(false);
   const [currentImage1, setCurrentImage1] = useState("image1"); // Thêm state để theo dõi ảnh hiện tại
@@ -82,15 +80,15 @@ const Booking = () => {
     filterBookings(timeRange, priceVal);
   }, [timeVal, priceVal, sortOption, selectedNhaXe]);
 
-  const booking1 = axios.get(
-    `http://localhost:8080/identity/api/admin/tripseat`
-  );
+  // const booking1 = axios.get(
+  //   `http://localhost:8080/identity/api/admin/tripseat`
+  // );
   const [array, setArray] = useState([]); // Mảng các chuyến xe sau khi get từ backend
   const [uniqueBookingNames, setUniqueBookings] = useState();
   function getUniqueAdminNames(data) {
     const seenAdmins = new Set();
     return data.filter((entry) => {
-      const adminName = entry.admin.adminname;
+      const adminName = entry.provider;
       if (seenAdmins.has(adminName)) {
         return false;
       } else {
@@ -106,7 +104,6 @@ const Booking = () => {
       try {
         // const response = await booking1;
         const response = JSON.parse(sessionStorage.getItem("filteredList"));
-
         const uniqueBooking = getUniqueAdminNames(response); //hàm xử lý data đầu vào lọc ra danh sách các nhà xe không trùng
         setUniqueBookings(uniqueBooking); // data hiển thị trong phần lọc
         setFilteredAndSortedBookings(response);
@@ -119,30 +116,6 @@ const Booking = () => {
   }, []);
 
   const bookings = array;
-
-  const [ratings, setRatings] = useState({});
-
-  async function fetchDataAndRender(adminId) {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/identity/api/admin/comment/rate/${adminId}`
-      );
-      const data = response.data;
-      setRatings((prevRatings) => ({ ...prevRatings, [adminId]: data }));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
-
-  useEffect(() => {
-    const fetchData = () => {
-      filteredAndSortedBookings.forEach(async (booking) => {
-        await fetchDataAndRender(booking.admin.adminid);
-      });
-    };
-
-    fetchData();
-  }, [filteredAndSortedBookings]);
 
   // Hàm xử lý sự kiện khi có sự thay đổi trong ô đánh dấu nhà xe
   const handleNhaXeChange = (event) => {
@@ -166,7 +139,7 @@ const Booking = () => {
     } else {
       // Lọc danh sách chuyến đi sao cho nhà xe nằm trong danh sách nhà xe được chọn
       return list.filter((booking) =>
-        selectedNhaXe.includes(booking.admin.adminname)
+        selectedNhaXe.includes(booking.provider)
       );
     }
   };
@@ -182,16 +155,16 @@ const Booking = () => {
     switch (option) {
       case "earliest":
         return list.slice().sort((a, b) => {
-          const timeA = getHourAndMinute(a.trip.starttime);
-          const timeB = getHourAndMinute(b.trip.starttime);
+          const timeA = getHourAndMinute(a.departurePoints[0].time);
+          const timeB = getHourAndMinute(b.departurePoints[0].time);
           return (
             timeA.hour * 60 + timeA.minute - (timeB.hour * 60 + timeB.minute)
           );
         });
       case "latest":
         return list.slice().sort((a, b) => {
-          const timeA = getHourAndMinute(a.trip.starttime);
-          const timeB = getHourAndMinute(b.trip.starttime);
+          const timeA = getHourAndMinute(a.departurePoints[0].time);
+          const timeB = getHourAndMinute(b.departurePoints[0].time);
           return (
             timeB.hour * 60 + timeB.minute - (timeA.hour * 60 + timeA.minute)
           );
@@ -199,11 +172,11 @@ const Booking = () => {
       case "highest":
         return list
           .slice()
-          .sort((a, b) => ratings[b.admin.adminid] - ratings[a.admin.adminid]);
+          // .sort((a, b) => ratings[b.admin.adminid] - ratings[a.admin.adminid]);
       case "ascending":
-        return list.slice().sort((a, b) => a.seat.price - b.seat.price);
+        return list.slice().sort((a, b) => a.price - b.price);
       case "descending":
-        return list.slice().sort((a, b) => b.seat.price - a.seat.price);
+        return list.slice().sort((a, b) => b.price - a.price);
       default:
         return list;
     }
@@ -223,16 +196,16 @@ const Booking = () => {
       if (
         priceRange[0] !== priceRange[1] &&
         timeRange[0] !== timeRange[1] &&
-        booking.seat.price >= priceRange[0] &&
-        booking.seat.price <= priceRange[1]
+        booking.price >= priceRange[0] &&
+        booking.price <= priceRange[1]
       ) {
         if (
-          getHourAndMinute(booking.trip.starttime).hour >= timeRange[0] &&
-          getHourAndMinute(booking.trip.endtime).hour <= timeRange[1]
+          getHourAndMinute(booking.departurePoints[0].time).hour >= timeRange[0] &&
+          getHourAndMinute(booking.arrivalPoints[booking.arrivalPoints.length - 1].time).hour <= timeRange[1]
         ) {
-          if (getHourAndMinute(booking.trip.endtime).hour < timeRange[1]) {
+          if (getHourAndMinute(booking.arrivalPoints[booking.arrivalPoints.length - 1].time).hour < timeRange[1]) {
             return true;
-          } else if (getHourAndMinute(booking.trip.endtime).minute === 0)
+          } else if (getHourAndMinute(booking.arrivalPoints[booking.arrivalPoints.length - 1].time).minute === 0)
             return true;
           else return false;
         } else return false;
@@ -240,7 +213,6 @@ const Booking = () => {
         return false;
       }
     });
-    console.log("check:",filtered1)
     const filtered2 = filterByNhaXe(filtered1, selectedNhaXe);
     const finallist = sortBookings(sortOption, filtered2);
     setFilteredAndSortedBookings(finallist);
@@ -250,15 +222,15 @@ const Booking = () => {
   const [currentBookingPrice, setCurrentBookingPrice] = useState(null);
   const [currentBooking, setCurrentBooking] = useState(null);
 
-  const handleBookTicket = (event, booking, id) => {
-    console.log("Booking được chọn:", booking);
-    if (showPickSeat === null) setShowPickSeat(id);
-    else setShowPickSeat(null);
-    setCurrentBookingPrice(booking.seat.price);
+  const handleBookTicket = (id) => {
+    // console.log("Booking được chọn:", id);
+    // if (showPickSeat === null) setShowPickSeat(id);
+    // else setShowPickSeat(null);
+    // setCurrentBookingPrice(booking.price);
     // console.log(currentBookingPrice);
-    setCurrentBooking(booking);
-    console.log(booking);
-    console.log(id);
+    setCurrentBooking(id);
+    // console.log(booking);
+    // console.log(id);
   };
   // console.log(currentBooking);
 
@@ -268,12 +240,12 @@ const Booking = () => {
     setShowLocation(id);
   };
 
-  const renderSeatNumbers = (booking) => {
-    return Array.from(
-      { length: booking.trip.coach.number },
-      (_, index) => index + 1
-    );
-  };
+  // const renderSeatNumbers = (booking) => {
+  //   return Array.from(
+  //     { length: booking.trip.coach.number },
+  //     (_, index) => index + 1
+  //   );
+  // };
 
   const [picticket, setPickTicKet] = useState("");
 
@@ -293,19 +265,6 @@ const Booking = () => {
     console.log(event.target.value);
   };
 
-  const handleSendTrip = () => {};
-
-  // async function getTrip() {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:8080/identity/users/danhsachtatcacacghetrenchuyenxe`
-  //     );
-  //     const data = response.data;
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // }
   const [pickid1, setPickId] = useState("");
   const [dropid, setDropId] = useState("");
 
@@ -331,12 +290,12 @@ const Booking = () => {
       const token = sessionStorage.getItem("token");
       // console.log(token);
       const headers = {
-        Authorization: ` ${token}`,
+        Authorization: `Bearer ${token}`,
       };
       const response = await axios.post(
         "http://localhost:8080/identity/users/datvexe",
         {
-          tripid: parseInt(currentBooking.trip.tripid),
+          tripid: parseInt(currentBooking.id),
           seatid: [currentBooking.seat.seatid], // Thay đổi giá trị này nếu có cách lấy dữ liệu ghế đang chọn
           pickAddress: {
             pickid: parseInt(pickid1),
@@ -375,25 +334,8 @@ const Booking = () => {
       console.error("Error fetching data:", error);
     }
   }
-  const handledDisable = (index) => {
-    let isDisabled = false;
 
-    tickets.forEach((ticket) => {
-      if (parseInt(ticket.seatlocation) === index) {
-        if (parseInt(ticket.status) === 1) {
-          isDisabled = true;
-        }
-      }
-      // These console.log statements are now reachable
-      // console.log(ticket.seatlocation);
-      // console.log(ticket.status);
-    });
-
-    return isDisabled;
-  };
   const [showRating, setShowRating] = useState(null);
-
-  console.log(showRating);
 
   const handleShowRating = (id) => {
     if (showRating === null) setShowRating(id);
@@ -401,35 +343,38 @@ const Booking = () => {
   };
 
   const [comments, setComments] = useState([]);
-  async function getCommentById(adminid) {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/identity/api/admin/comment/${adminid}`
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
+  // async function getCommentById(adminid) {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:8080/identity/api/admin/comment/${adminid}`
+  //     );
+  //     const data = response.data;
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // }
 
   const token = sessionStorage.getItem("token");
   const [user, setUser] = useState({});
 
   async function getUserInfo() {
+    const token = sessionStorage.getItem("token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    
     try {
       const response = await axios.get(
-        `http://localhost:8080/identity/users/tk/${token}`
+        `http://localhost:4000/api/user`, {headers: headers}
       );
-      const data = response.data;
+      const data = response.data.item;
       setUser(data);
       console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
-
-  console.log(user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -587,16 +532,16 @@ const Booking = () => {
                 {showCheckbox &&
                   uniqueBookingNames.map((booking) => (
                     <div style={{ paddingBottom: "15px" }}>
-                      <label key={booking.trip.tripid}>
+                      <label key={booking.id}>
                         <input
                           type="checkbox"
-                          value={booking.admin.adminname}
+                          value={booking.provider}
                           onChange={handleNhaXeChange}
                           checked={selectedNhaXe.includes(
-                            booking.admin.adminname
+                            booking.provider
                           )}
                         />
-                        {booking.admin.adminname}
+                        {booking.provider}
                       </label>
                       <br />
                     </div>
@@ -610,11 +555,11 @@ const Booking = () => {
           <div>
             <ul className={styles.tripList}>
               {filteredAndSortedBookings.map((booking) => (
-                <li key={booking.trip.tripid} className={styles.tripWrapper}>
+                <li key={booking.id} className={styles.tripWrapper}>
                   <div className={styles.tripContainer}>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <img
-                        src={booking.admin.adminImage}
+                        // src={booking.admin.adminImage}
                         className={styles.bookingImg}
                       />
                     </div>
@@ -634,13 +579,13 @@ const Booking = () => {
                       >
                         <div className={styles.tripTitle}>
                           {"Nhà xe "}
-                          {booking.admin.adminname}
+                          {booking.provider}
                         </div>
                         <div
                           className={styles.tripTitle}
                           style={{ color: "#2474E5" }}
                         >
-                          {booking.seat.price}
+                          {booking.price}
                           {"đ"}
                         </div>
                       </div>
@@ -653,14 +598,12 @@ const Booking = () => {
                           }}
                         >
                           <div style={{ display: "flex" }}>
-                            Chuyến xe mang biển số&nbsp;{" "}
                             <div style={{ fontWeight: "bold" }}>
-                              {booking.trip.coach.licenseplate}
+                              {booking.busType}
                             </div>
                           </div>
                           <div>
-                            {Math.round(ratings[booking.admin.adminid] * 10) /
-                              10}{" "}
+                            {booking.avgStar}{" "}
                             ⭐
                           </div>
                         </div>
@@ -702,25 +645,26 @@ const Booking = () => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {booking.trip.starttime.slice(11, 16)}
+                                {booking.departurePoints[0].time.slice(11, 16)}
                               </div>
                               <div class="place">
                                 •{" "}
                                 {"Ngày " +
-                                  booking.trip.starttime.slice(8, 10) +
+                                  booking.departurePoints[0].time.slice(8, 10) +
                                   "/" +
-                                  booking.trip.starttime.slice(5, 7) +
+                                  booking.departurePoints[0].time.slice(5, 7) +
                                   "/" +
-                                  booking.trip.starttime.slice(0, 4)}
+                                  booking.departurePoints[0].time.slice(0, 4)
+                                  }
                               </div>
                               <div class="place">
-                                • {booking.trip.startprovince.pname}
+                                • {booking.departureProvince}
                               </div>
                             </div>
                             <div style={{ color: "#A1A1A1" }}>
                               {hourDifference(
-                                booking.trip.starttime,
-                                booking.trip.endtime
+                                booking.departurePoints[0].time,
+                                booking.arrivalPoints[booking.arrivalPoints.length - 1].time
                               ) + "m"}
                             </div>
                             <div className={styles.contentTrip}>
@@ -731,19 +675,19 @@ const Booking = () => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {booking.trip.endtime.slice(11, 16)}
+                                {booking.arrivalPoints[booking.arrivalPoints.length - 1].time.slice(11, 16)}
                               </div>
                               <div class="place">
                                 •{" "}
                                 {"Ngày " +
-                                  booking.trip.endtime.slice(8, 10) +
+                                  booking.arrivalPoints[booking.arrivalPoints.length - 1].time.slice(8, 10) +
                                   "/" +
-                                  booking.trip.endtime.slice(5, 7) +
+                                  booking.arrivalPoints[booking.arrivalPoints.length - 1].time.slice(5, 7) +
                                   "/" +
-                                  booking.trip.endtime.slice(0, 4)}
+                                  booking.arrivalPoints[booking.arrivalPoints.length - 1].time.slice(0, 4)}
                               </div>
                               <div class="place">
-                                • {booking.trip.endprovince.pname}
+                                • {booking.arrivalProvince}
                               </div>
                             </div>
                           </div>
@@ -759,13 +703,12 @@ const Booking = () => {
                         >
                           <div style={{ fontWeight: "600", color: "#2474E5" }}
                             onClick={() => {
-                              handleShowRating(booking.trip.tripid);
-                              const fetchComment = async (adminid1) => {
-                                const comment1 = await getCommentById(adminid1);
-                                setComments(comment1);
-                              };
-                              fetchComment(booking.admin.adminid);
-                              console.log("comment: ", comments);
+                              // handleShowRating(booking.id);
+                              // const fetchComment = async (id) => {
+                              //   const comment1 = await getCommentById(id);
+                              //   setComments(comment1);
+                              // };
+                              // fetchComment(booking.id);
                             }}>
                             Xem bình luận
                           </div>
@@ -773,24 +716,20 @@ const Booking = () => {
                           <button
                             className={`${styles.buttons} ${styles.orderButton}`}
                             onClick={(event) => {
-                              handleBookTicket(
-                                event,
-                                booking,
-                                booking.trip.tripid
-                              );
-                              const fetchTicket = async (tripid1) => {
-                                const ticket1 = await getTicketbyTripid(
-                                  tripid1
-                                );
-                                setTicket(ticket1);
-                                sessionStorage.setItem(
-                                  "ticket",
-                                  JSON.stringify(ticket1)
-                                );
-                                // console.log(tickets);
-                              };
+                              handleBookTicket(booking.id);
+                              // const fetchTicket = async (tripid1) => {
+                              //   const ticket1 = await getTicketbyTripid(
+                              //     tripid1
+                              //   );
+                              //   setTicket(ticket1);
+                              //   sessionStorage.setItem(
+                              //     "ticket",
+                              //     JSON.stringify(ticket1)
+                              //   );
+                              //   // console.log(tickets);
+                              // };
 
-                              fetchTicket(booking.trip.tripid);
+                              // fetchTicket(booking.trip.tripid);
                               // console.log("vé xe:", tickets);
                             }}
                           >
@@ -802,42 +741,42 @@ const Booking = () => {
                     </div>
 
                     <div className="info">
-                      <strong>Nhà xe:</strong> {booking.admin.adminname} <br />
-                      <strong>Giờ đi:</strong> {booking.trip.starttime} <br />
-                      <strong>Giờ đón:</strong> {booking.trip.endtime} <br />
-                      <strong>Giá vé:</strong> {booking.seat.price} <br />
+                      <strong>Nhà xe:</strong> {booking.provider} <br />
+                      <strong>Giờ đi:</strong>{/*{booking.trip.starttime}*/} <br />
+                      <strong>Giờ đón:</strong>{/*{booking.trip.endtime}*/} <br />
+                      <strong>Giá vé:</strong> {booking.price} <br />
                       <strong>Đánh giá:</strong>{" "}
-                      {ratings[booking.admin.adminid]} sao
+                      {/* {ratings[booking.admin.adminid]} sao */}
                       <br />
                       <button
                         className="button"
-                        onClick={(event) => {
-                          handleBookTicket(event, booking, booking.trip.tripid);
-                          const fetchTicket = async (tripid1) => {
-                            const ticket1 = await getTicketbyTripid(tripid1);
-                            setTicket(ticket1);
-                            sessionStorage.setItem(
-                              "ticket",
-                              JSON.stringify(ticket1)
-                            );
-                            // console.log(tickets);
-                          };
+                        // onClick={(event) => {
+                        //   handleBookTicket(event, booking, booking.trip.tripid);
+                        //   const fetchTicket = async (tripid1) => {
+                        //     const ticket1 = await getTicketbyTripid(tripid1);
+                        //     setTicket(ticket1);
+                        //     sessionStorage.setItem(
+                        //       "ticket",
+                        //       JSON.stringify(ticket1)
+                        //     );
+                        //     // console.log(tickets);
+                        //   };
 
-                          fetchTicket(booking.trip.tripid);
-                          // console.log("vé xe:", tickets);
-                        }}
+                        //   fetchTicket(booking.trip.tripid);
+                        //   // console.log("vé xe:", tickets);
+                        // }}
                       >
                         Chọn chuyến
                       </button>
                       <button
                         onClick={() => {
-                          handleShowRating(booking.trip.tripid);
-                          const fetchComment = async (adminid1) => {
-                            const comment1 = await getCommentById(adminid1);
-                            setComments(comment1);
-                          };
-                          fetchComment(booking.admin.adminid);
-                          console.log("comment: ", comments);
+                          // handleShowRating(booking.trip.tripid);
+                          // const fetchComment = async (adminid1) => {
+                          //   const comment1 = await getCommentById(adminid1);
+                          //   setComments(comment1);
+                          // };
+                          // fetchComment(booking.admin.adminid);
+                          // console.log("comment: ", comments);
                         }}
                       >
                         Xem đánh giá về nhà xe
@@ -845,12 +784,12 @@ const Booking = () => {
                       
                     </div>
                   </div>
-                  {showPickSeat === booking.trip.tripid && (
+                  {showPickSeat === booking.id && (
                     <div>
                       <div className="show1">
-                        <p>Còn {booking.trip.remainingSeat} chỗ</p>
+                        <p>Còn {booking.availableSeatCount} chỗ</p>
                         <p>Chọn ghế:</p>
-                        {renderSeatNumbers(booking).map((number) => (
+                        {/* {renderSeatNumbers(booking).map((number) => (
                           <div key={number}>
                             <input
                               type="checkbox"
@@ -866,16 +805,16 @@ const Booking = () => {
                               Ghế {number}
                             </label>
                           </div>
-                        ))}
+                        ))} */}
 
-                        <button
+                        {/* <button
                           className="button"
                           onClick={(event) =>
                             handlePick(event, booking, booking.trip.tripid)
                           }
                         >
                           Tiếp tục
-                        </button>
+                        </button> */}
                       </div>
                       {showLocation === booking.trip.tripid && (
                         <div className="show2">
@@ -951,7 +890,7 @@ const Booking = () => {
                     </div>
                   )}
 
-                      {showRating === booking.trip.tripid && (
+                      {showRating === booking.id && (
                             <div className="showrating">
                               <div>
                                 {comments.map((comment) => (

@@ -14,25 +14,30 @@ const Homepage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/identity/api/admin/province")
+      .get("http://localhost:4000/api/province")
       .then((response) => {
-        setProvinceOption(response.data);
+        setProvinceOption(response.data.items);
       })
       .catch((error) => {
         console.error("Error fetching options:", error);
       });
   }, []);
 
-  const token = sessionStorage.getItem("token");
   const [user, setUser] = useState({});
-
   async function getUserInfo() {
+    const token = sessionStorage.getItem("token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     try {
       const response = await axios.get(
-        `http://localhost:8080/identity/users/tk/${token}`
+        `http://localhost:4000/api/user`,
+        {
+          headers: headers
+        }
       );
       const data = response.data;
-      setUser(data);
+      setUser(data.item);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -53,14 +58,15 @@ const Homepage = () => {
   const handlePost = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/identity/api/admin/trip/filter",
+        "http://localhost:4000/api/trip",
         {
-          tenTinhDen: endPointValue,
-          tenTinhDi: startPointValue,
-          date: date,
+          arrivalProvinceId: endPointValue,
+          departureProvinceId: startPointValue,
+          departureTime: date,
         }
       );
-      sessionStorage.setItem("filteredList", JSON.stringify(response.data));
+      // console.log(response.data);
+      sessionStorage.setItem("filteredList", JSON.stringify(response.data.items));
       navigate("/booking");
     } catch (error) {
       console.error("Error posting data:", error);
@@ -70,6 +76,7 @@ const Homepage = () => {
   const [date, setDate] = useState("");
 
   const handleDateChange = (event) => {
+    console.log(event.target.value);
     const selectedDate = event.target.value;
     setDate(selectedDate);
   };
@@ -140,8 +147,8 @@ const Homepage = () => {
                       }}
                     >
                       {provinceOption.map((option) => (
-                        <option key={option.pid} value={option.pname}>
-                          {option.pname}
+                        <option key={option._id} value={option._id}>
+                          {option.name}
                         </option>
                       ))}
                     </select>
@@ -166,8 +173,8 @@ const Homepage = () => {
                       }}
                     >
                       {provinceOption.map((option) => (
-                        <option key={option.pid} value={option.pname}>
-                          {option.pname}
+                        <option key={option._id} value={option._id}>
+                          {option.name}
                         </option>
                       ))}
                     </select>

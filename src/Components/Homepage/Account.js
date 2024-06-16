@@ -48,11 +48,15 @@ const Account = (props) => {
         </div>
         <div className={styles.userInfoContainer}>
           <div>Số điện thoại</div>
-          <div style={{ fontWeight: "700" }}>{user.phone}</div>
+          <div style={{ fontWeight: "700" }}>{user.phoneNumber}</div>
         </div>
         <div className={styles.userInfoContainer}>
           <div>Email</div>
           <div style={{ fontWeight: "700" }}>{user.email}</div>
+        </div>
+        <div className={styles.userInfoContainer}>
+          <div>Số dư tài khoản</div>
+          <div style={{ fontWeight: "700" }}>{user.balance + " VND"}</div>
         </div>
 
         <button
