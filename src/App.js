@@ -18,6 +18,7 @@ import LoginCoach from "./Components/Login/LoginCoach";
 import RegisterCoach from "./Components/Register/RegisterCoach";
 import AdminLogin from "./Components/Login/AdminLogin";
 import AdminRegister from "./Components/Register/AdminRegister";
+import Ticket from "./Components/Ticket/Ticket";
 
 // function App() {
 //   const [userState, setUserState] = useState({});
@@ -74,6 +75,7 @@ function App() {
           <Route path="/logincoach" element={<LoginCoach />}></Route>
           <Route path="/registercoach" element={<RegisterCoach />}></Route>
           <Route path="/" element={<Navigate replace to="/homepage" />}></Route>
+          <Route path="/ticket" element={<Ticket />}></Route>
         </Routes>
       </BrowserRouter>
     </>
