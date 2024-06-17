@@ -32,24 +32,24 @@ const Trip = (props) => {
     return Math.round(differenceInHours * 100) / 100;
   }
 
-  const tripTime = hourDifference(trip.trip.starttime, trip.trip.endtime) + "m";
+  const tripTime = hourDifference(trip.stopPoints[0].time, trip.stopPoints[1].time) + "m";
 
-  const tripStartTime = trip.trip.starttime.slice(11, 16);
-  const tripEndTime = trip.trip.endtime.slice(11, 16);
+  const tripStartTime = trip.stopPoints[0].time.slice(11, 16);
+  const tripEndTime = trip.stopPoints[1].time.slice(11, 16);
   const tripStartDate =
     "Ngày " +
-    trip.trip.starttime.slice(8, 10) +
+    trip.stopPoints[0].time.slice(8, 10) +
     "/" +
-    trip.trip.starttime.slice(5, 7) +
+    trip.stopPoints[0].time.slice(5, 7) +
     "/" +
-    trip.trip.starttime.slice(0, 4);
+    trip.stopPoints[0].time.slice(0, 4);
   const tripEndDate =
     "Ngày " +
-    trip.trip.endtime.slice(8, 10) +
+    trip.stopPoints[1].time.slice(8, 10) +
     "/" +
-    trip.trip.endtime.slice(5, 7) +
+    trip.stopPoints[1].time.slice(5, 7) +
     "/" +
-    trip.trip.endtime.slice(0, 4);
+    trip.stopPoints[1].time.slice(0, 4);
 
   const [buttonPopup, setButtonPopup] = useState(false);
 
@@ -59,65 +59,65 @@ const Trip = (props) => {
     return standardDate;
   }
 
-  const [tripInfo, setTripInfo] = useState({
-    tripid: trip.trip.tripid,
-    starttime: trip.trip.starttime,
-    endtime: trip.trip.endtime,
-    startprovince: {
-      pid: trip.trip.startprovince.pid,
-      pname: trip.trip.startprovince.pname,
-    },
-    endprovince: {
-      pid: trip.trip.endprovince.pid,
-      pname: trip.trip.endprovince.pname,
-    },
-    coach: {
-      licenseplate: trip.trip.coach.licenseplate,
-    },
-  });
+  // const [tripInfo, setTripInfo] = useState({
+  //   tripid: trip.trip.tripid,
+  //   starttime: trip.trip.starttime,
+  //   endtime: trip.trip.endtime,
+  //   startprovince: {
+  //     pid: trip.trip.startprovince.pid,
+  //     pname: trip.trip.startprovince.pname,
+  //   },
+  //   endprovince: {
+  //     pid: trip.trip.endprovince.pid,
+  //     pname: trip.trip.endprovince.pname,
+  //   },
+  //   coach: {
+  //     licenseplate: trip.trip.coach.licenseplate,
+  //   },
+  // });
 
-  const handleChange = (e) => {
-    setTripInfo({ ...tripInfo, [e.target.name]: e.target.value });
-    if (e.target.name == "starttime") {
-      setTripInfo({
-        ...tripInfo,
-        starttime: convertToStandardDateFormat(e.target.value),
-      });
-      console.log(convertToStandardDateFormat(e.target.value));
-    }
-    if (e.target.name == "endtime")
-      setTripInfo({
-        ...tripInfo,
-        endtime: convertToStandardDateFormat(e.target.value),
-      });
-    console.log(tripInfo);
-  };
+  // const handleChange = (e) => {
+  //   setTripInfo({ ...tripInfo, [e.target.name]: e.target.value });
+  //   if (e.target.name == "starttime") {
+  //     setTripInfo({
+  //       ...tripInfo,
+  //       starttime: convertToStandardDateFormat(e.target.value),
+  //     });
+  //     console.log(convertToStandardDateFormat(e.target.value));
+  //   }
+  //   if (e.target.name == "endtime")
+  //     setTripInfo({
+  //       ...tripInfo,
+  //       endtime: convertToStandardDateFormat(e.target.value),
+  //     });
+  //   console.log(tripInfo);
+  // };
 
 
-  const addTrip = async () => {
-    console.log(tripInfo);
-    axios
-      .put("http://localhost:8080/identity/api/admin/edit/trip", tripInfo)
-      .then((res) => {
-        alert("thanh cong ");
-      });
+  // const addTrip = async () => {
+  //   console.log(tripInfo);
+  //   axios
+  //     .put("http://localhost:8080/identity/api/admin/edit/trip", tripInfo)
+  //     .then((res) => {
+  //       alert("thanh cong ");
+  //     });
 
-    console.log(tripInfo);
-    setButtonPopup(false);
-  };
+  //   console.log(tripInfo);
+  //   setButtonPopup(false);
+  // };
 
-  const tripid = trip.trip.tripid;
+  // const tripid = trip.trip.tripid;
 
-  const deleteTrip = async () => {
-    console.log(tripid);
-    axios
-      .delete(`http://localhost:8080/identity/api/admin/trip/delete/${tripid}`)
-      .then((res) => {
-        alert("thanh cong ");
-      });
+  // const deleteTrip = async () => {
+  //   console.log(tripid);
+  //   axios
+  //     .delete(`http://localhost:8080/identity/api/admin/trip/delete/${tripid}`)
+  //     .then((res) => {
+  //       alert("thanh cong ");
+  //     });
 
-    setButtonPopup(false);
-  };
+  //   setButtonPopup(false);
+  // };
 
   return (
     <div className={styles.infoBox}>
@@ -129,12 +129,12 @@ const Trip = (props) => {
               <div className={styles.places}>
                 <div className={styles.inputContainer}>
                   <label className={styles.title}>Nơi xuất phát*</label>
-                  <input className={styles.input} value={trip.trip.startprovince.pname}></input>
+                  <input className={styles.input} value={trip.stopPoints[0].name}></input>
                 </div>
 
                 <div className={styles.inputContainer}>
                   <label className={styles.title}>Nơi đến*</label>
-                  <input className={styles.input} value={trip.trip.endprovince.pname}></input>
+                  <input className={styles.input} value={trip.stopPoints[1].name}></input>
                 </div>
               </div>
 
@@ -154,12 +154,12 @@ const Trip = (props) => {
                 <div className={styles.types} style={{ width: "100%" }}>
                   <div className={styles.inputContainer}>
                     <label className={styles.title}>Giờ đi*</label>
-                    <input className={styles.input} name="starttime" type="datetime-local" placeholder={trip.trip.starttime} onChange={handleChange}></input>
+                    <input className={styles.input} name="starttime" type="datetime-local" placeholder={trip.stopPoints[0].time} /*onChange={handleChange}*/></input>
                   </div>
 
                   <div className={styles.inputContainer}>
                     <label className={styles.title}>Giờ về*</label>
-                    <input className={styles.input} name="endtime" type="datetime-local" placeholder={trip.trip.endtime} onChange={handleChange}></input>
+                    <input className={styles.input} name="endtime" type="datetime-local" placeholder={trip.stopPoints[1].time} /*onChange={handleChange}*/></input>
                   </div>
                 </div>
 
@@ -176,7 +176,7 @@ const Trip = (props) => {
                   className={styles.buttons}
                   id={styles.searchButton}
                   style={{ backgroundColor: "#3E8ACC", color: "white" }}
-                  onClick={addTrip}
+                  /*onClick={addTrip}*/
                 >
                   Chỉnh sửa
                   <span></span>
@@ -188,7 +188,7 @@ const Trip = (props) => {
                   className={styles.buttons}
                   id={styles.searchButton}
                   style={{ backgroundColor: "#DB524B", color: "white" }}
-                  onClick={deleteTrip}
+                  /*onClick={deleteTrip}*/
                 >
                   Xóa chuyến đi
                   <span></span>
@@ -211,7 +211,7 @@ const Trip = (props) => {
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div className={styles.tripTitle}>Chuyến đi {trip.trip.tripid}</div>
+          <div className={styles.tripTitle}>Chuyến đi {trip.id}</div>
           <div className={styles.tripTitle} style={{ color: "#2474E5" }}>
             Còn chỗ
           </div>
@@ -220,7 +220,7 @@ const Trip = (props) => {
           <div style={{ display: "flex" }}>
             Chuyến xe mang biển số&nbsp;{" "}
             <div style={{ fontWeight: "bold" }}>
-              {trip.trip.coach.licenseplate}
+              {trip.busType}
             </div>
           </div>
           <div className={styles.tripRoute}>
@@ -259,9 +259,33 @@ const Trip = (props) => {
                   {tripStartTime}
                 </div>
                 <div class="place">• {tripStartDate}</div>
-                <div class="place">• {trip.trip.startprovince.pname}</div>
+                <div class="place">• {trip.stopPoints[0].name}</div>
               </div>
-              <div style={{ color: "#A1A1A1" }}>{tripTime}</div>
+              {trip.stopPoints.slice(1).map((stopPoint, index) => (
+                <>
+                  <div style={{ color: "#A1A1A1" }}>"tripTime"</div>
+                  <div className={styles.contentTrip}>
+                    <div
+                      style={{
+                        color: "#707070",
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {stopPoint.time.slice(11, 16)}
+                    </div>
+                    <div class="place">• {"Ngày " +
+                                            stopPoint.time.slice(8, 10) +
+                                            "/" +
+                                            stopPoint.time.slice(5, 7) +
+                                            "/" +
+                                            stopPoint.time.slice(0, 4)
+                                          }</div>
+                    <div class="place">• {stopPoint.name}</div>
+                  </div>
+                </>
+              ))}
+              {/* <div style={{ color: "#A1A1A1" }}>{tripTime}</div>
               <div className={styles.contentTrip}>
                 <div
                   style={{
@@ -273,8 +297,22 @@ const Trip = (props) => {
                   {tripEndTime}
                 </div>
                 <div class="place">• {tripEndDate}</div>
-                <div class="place">• {trip.trip.endprovince.pname}</div>
-              </div>
+                <div class="place">• {trip.stopPoints[1].name}</div>
+              </div> */}
+              {/* <div style={{ color: "#A1A1A1" }}>{tripTime}</div>
+              <div className={styles.contentTrip}>
+                <div
+                  style={{
+                    color: "#707070",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {tripEndTime}
+                </div>
+                <div class="place">• {tripEndDate}</div>
+                <div class="place">• {trip.stopPoints[1].name}</div>
+              </div> */}
             </div>
           </div>
         </div>

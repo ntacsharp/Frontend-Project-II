@@ -110,30 +110,34 @@ const Coach = () => {
 
   useEffect(() => {
     axios
-      .get(`API Get Cars`)
+      .get(`http://localhost:4000/api/bus`, {
+        headers: headers
+      })
       .then((response) => {
-        console.log(">>>>>>>>data", response.data);
-        setCar(response.data);
+        console.log(response.data.items);
+        setCar(response.data.items);
       })
       .catch((error) => {
         console.error("Error fetching options:", error);
       });
   }, []);
 
-  //Get Trip API
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:4000/api/trip/provider`, {
-  //       headers: headers
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data.items);
-  //       setTrip(response.data.items);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching options:", error);
-  //     });
-  // }, []);
+  // Get Trip API
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/api/trip/provider`, {
+        headers: headers
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setTrip(response.data.items);
+      })
+      .catch((error) => {
+        console.error("Error fetching options:", error);
+      });
+  }, []);
+
+  console.log(trip);
 
   useEffect(() => {
     axios
