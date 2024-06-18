@@ -218,7 +218,7 @@ const Trip = (props) => {
         </div>
         <div className={styles.tripInfo}>
           <div style={{ display: "flex" }}>
-            Chuyến xe mang biển số&nbsp;{" "}
+            {/* Chuyến xe mang biển số&nbsp;{" "} */}
             <div style={{ fontWeight: "bold" }}>
               {trip.busType}
             </div>
@@ -263,7 +263,7 @@ const Trip = (props) => {
               </div>
               {trip.stopPoints.slice(1).map((stopPoint, index) => (
                 <>
-                  <div style={{ color: "#A1A1A1" }}>"tripTime"</div>
+                  <div style={{ color: "#A1A1A1" }}>&nbsp;</div>
                   <div className={styles.contentTrip}>
                     <div
                       style={{

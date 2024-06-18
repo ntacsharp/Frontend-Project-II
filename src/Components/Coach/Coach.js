@@ -77,11 +77,12 @@ const Coach = () => {
   async function getAdminInfo() {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/provider`
+        `http://localhost:4000/api/provider`, {
+          headers: headers
+        }
       );
-      const data = response.data;
-      console.log(data);
-      setAdminInfo(data);
+      console.log(response.data.item);
+      setAdminInfo(response.data.item);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -114,7 +115,7 @@ const Coach = () => {
         headers: headers
       })
       .then((response) => {
-        console.log(response.data.items);
+        console.log(response.data);
         setCar(response.data.items);
       })
       .catch((error) => {
@@ -150,7 +151,7 @@ const Coach = () => {
       });
   }, []);
 
-  // console.log(provinces);
+  console.log(provinces);
 
   const currentProvince = "66573ff15226cf218ded7b41"
 
