@@ -258,8 +258,8 @@ const Booking = () => {
           "http://localhost:4000/api/ticket/",
           {
             tripId: currentBooking.id,
-            departureProvinceId: pickup,
-            arrivalProvinceId: drop,
+            departurePointId: pickup,
+            arrivalPointId: drop,
             seatCount: seatCount,
             date: dateStr
           },
@@ -292,8 +292,9 @@ const Booking = () => {
     if (event.target.value > currentBooking.availableSeatCount) {
       document.getElementById('seatCountInput').value = currentBooking.availableSeatCount
     }
-    setSeatCount(event.target.value < currentBooking.availableSeatCount ? event.target.value : currentBooking.availableSeatCount);
-    setCurrentBookingPrice(currentBooking.price * seatCount);
+    const tmp = event.target.value < currentBooking.availableSeatCount ? event.target.value : currentBooking.availableSeatCount
+    setSeatCount(tmp);
+    setCurrentBookingPrice(currentBooking.price * tmp);
   }
 
   const token = sessionStorage.getItem("token");
@@ -347,7 +348,7 @@ const Booking = () => {
           },
           { headers: headers }
         );
-        // navigate("/rating", { state: { currentBooking } }); // Navigate to Rating with currentBooking
+        navigate("/ticket");
         await handleShowRating(showRating);
         setCMT("");
         document.getElementById("CMTinput").value = "";
@@ -730,7 +731,7 @@ const Booking = () => {
                                     }}
                                   >
                                     {booking.arrivalPoints.map((pick) => (
-                                      <MenuItem value={pick.name}>
+                                      <MenuItem value={pick.id}>
                                         {pick.name}
                                       </MenuItem>
                                     ))}
