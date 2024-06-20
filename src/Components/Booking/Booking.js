@@ -172,7 +172,7 @@ const Booking = () => {
       case "highest":
         return list
           .slice()
-          // .sort((a, b) => ratings[b.admin.adminid] - ratings[a.admin.adminid]);
+      // .sort((a, b) => ratings[b.admin.adminid] - ratings[a.admin.adminid]);
       case "ascending":
         return list.slice().sort((a, b) => a.price - b.price);
       case "descending":
@@ -219,141 +219,82 @@ const Booking = () => {
   };
 
   const [showPickSeat, setShowPickSeat] = useState(null); // State quản lý div chọn chuyến
-  const [currentBookingPrice, setCurrentBookingPrice] = useState(null);
   const [currentBooking, setCurrentBooking] = useState(null);
 
-  const handleBookTicket = (id) => {
-    // console.log("Booking được chọn:", id);
-    // if (showPickSeat === null) setShowPickSeat(id);
-    // else setShowPickSeat(null);
-    // setCurrentBookingPrice(booking.price);
-    // console.log(currentBookingPrice);
-    setCurrentBooking(id);
-    // console.log(booking);
-    // console.log(id);
-  };
-  // console.log(currentBooking);
-
-  const [showLocation, setShowLocation] = useState(null); //State quản lý div điểm đón điểm trả
-  const handlePick = (event, booking, id) => {
-    event.preventDefault();
-    setShowLocation(id);
+  const handleBookTicket = (booking) => {
+    setShowPickSeat(booking.id);
+    setPickUp(null);
+    setDrop(null);
+    setSeatCount(1);
+    setCMT("");
+    setCurrentBookingPrice(0);
+    setCurrentBooking(booking);
   };
 
-  // const renderSeatNumbers = (booking) => {
-  //   return Array.from(
-  //     { length: booking.trip.coach.number },
-  //     (_, index) => index + 1
-  //   );
-  // };
-
-  const [picticket, setPickTicKet] = useState("");
-
-  const handlePickTicketChange = (event) => {
-    setPickTicKet(event.target.value);
-  };
-
-  const [pickup, setPickUp] = useState("");
+  const [pickup, setPickUp] = useState(null);
   const handlePickupPointChange = (event) => {
     setPickUp(event.target.value);
-    console.log(event.target.value);
+    console.log(event.target.value)
   };
 
-  const [drop, setDrop] = useState("");
+  const [drop, setDrop] = useState(null);
   const handleDropOffPointChange = (event) => {
     setDrop(event.target.value);
-    console.log(event.target.value);
   };
 
-  const [pickid1, setPickId] = useState("");
-  const [dropid, setDropId] = useState("");
 
   const navigate = useNavigate(); // Use useNavigate hook
   sessionStorage.setItem("booking", JSON.stringify(currentBooking));
 
   async function postData() {
-    try {
-      for (let i = 0; i < currentBooking.pickAddress.length; i++) {
-        const pickAddress = currentBooking.pickAddress[i];
-        if (pickAddress.pickname === pickup) {
-          setPickId(pickAddress.pickid);
-          break;
-        }
-      }
-      for (let i = 0; i < currentBooking.returnAddress.length; i++) {
-        const returnAddress = currentBooking.returnAddress[i];
-        if (returnAddress.returnaddress === drop) {
-          setDropId(returnAddress.returnid);
-          break;
-        }
-      }
-      const token = sessionStorage.getItem("token");
-      // console.log(token);
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const response = await axios.post(
-        "http://localhost:8080/identity/users/datvexe",
-        {
-          tripid: parseInt(currentBooking.id),
-          seatid: [currentBooking.seat.seatid], // Thay đổi giá trị này nếu có cách lấy dữ liệu ghế đang chọn
-          pickAddress: {
-            pickid: parseInt(pickid1),
-            pickname: pickup,
+    if (pickup && drop) {
+      try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        const dateStr = sessionStorage.getItem("date");
+        const response = await axios.post(
+          "http://localhost:4000/api/ticket/",
+          {
+            tripId: currentBooking.id,
+            departureProvinceId: pickup,
+            arrivalProvinceId: drop,
+            seatCount: seatCount,
+            date: dateStr
           },
-          returnAddress: {
-            returnid: parseInt(dropid),
-            returnaddress: drop,
-          },
-          seatlocation: seat, // Giá trị ghế đang chọn
-          status: "0",
-        },
-        { headers: headers }
-      );
-      console.log("Response:", response.data);
-      // navigate("/rating", { state: { currentBooking } }); // Navigate to Rating with currentBooking
-
-      return response.data;
-    } catch (error) {
-      console.error("Error:", error);
-      throw error;
+          { headers: headers }
+        );
+        // navigate("/rating", { state: { currentBooking } }); // Navigate to Rating with currentBooking
+        console.log(response);
+        return response.data;
+      } catch (error) {
+        console.error("Error:", error);
+        throw error;
+      }
     }
   }
 
-  const [seat, setSeat] = useState("");
-  const [tickets, setTicket] = useState([]);
-
-  async function getTicketbyTripid(tripid) {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/identity/api/admin/ticket/${tripid}`
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
 
   const [showRating, setShowRating] = useState(null);
-
-  const handleShowRating = (id) => {
-    if (showRating === null) setShowRating(id);
-    else setShowRating(null);
+  const [ratings, setRatings] = useState([]);
+  const handleShowRating = async (id) => {
+    setShowRating(id);
+    const response = await axios.get(
+      "http://localhost:4000/api/review/" + id
+    );
+    setRatings(response.data.items);
   };
 
-  const [comments, setComments] = useState([]);
-  // async function getCommentById(adminid) {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:8080/identity/api/admin/comment/${adminid}`
-  //     );
-  //     const data = response.data;
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // }
+  const [seatCount, setSeatCount] = useState(0);
+  const [currentBookingPrice, setCurrentBookingPrice] = useState(null);
+  const handleSeatCountChange = (event) => {
+    if (event.target.value > currentBooking.availableSeatCount) {
+      document.getElementById('seatCountInput').value = currentBooking.availableSeatCount
+    }
+    setSeatCount(event.target.value < currentBooking.availableSeatCount ? event.target.value : currentBooking.availableSeatCount);
+    setCurrentBookingPrice(currentBooking.price * seatCount);
+  }
 
   const token = sessionStorage.getItem("token");
   const [user, setUser] = useState({});
@@ -363,14 +304,13 @@ const Booking = () => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    
+
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/user`, {headers: headers}
+        `http://localhost:4000/api/user`, { headers: headers }
       );
       const data = response.data.item;
       setUser(data);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -390,25 +330,39 @@ const Booking = () => {
     const differenceInHours = differenceInMilliseconds / (1000 * 60);
     return Math.round(differenceInHours * 100) / 100;
   }
-
-  // const tripTime = hourDifference(booking.trip.starttime, booking.trip.endtime) + "m";
-
-  // const tripStartTime = booking.trip.starttime.slice(11, 16);
-  // const tripEndTime = booking.trip.endtime.slice(11, 16);
-  // const tripStartDate =
-  //   "Ngày " +
-  //   booking.trip.starttime.slice(8, 10) +
-  //   "/" +
-  //   booking.trip.starttime.slice(5, 7) +
-  //   "/" +
-  //   booking.trip.starttime.slice(0, 4);
-  // const tripEndDate =
-  //   "Ngày " +
-  //   booking.trip.endtime.slice(8, 10) +
-  //   "/" +
-  //   booking.trip.endtime.slice(5, 7) +
-  //   "/" +
-  //   booking.trip.endtime.slice(0, 4);
+  const [cmt, setCMT] = useState("");
+  async function handleAddReview() {
+    if (cmt.length > 0) {
+      try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        const response = await axios.post(
+          "http://localhost:4000/api/review",
+          {
+            tripId: showRating,
+            comment: cmt,
+            star: 0
+          },
+          { headers: headers }
+        );
+        // navigate("/rating", { state: { currentBooking } }); // Navigate to Rating with currentBooking
+        await handleShowRating(showRating);
+        setCMT("");
+        document.getElementById("CMTinput").value = "";
+        return response.data;
+      } catch (error) {
+        console.error("Error:", error);
+        throw error;
+      }
+    }
+  }
+  console.log(user)
+  const handleCMTChange = (event) => {
+    setCMT(event.target.value);
+    console.log(event.target.value);
+  }
 
   return (
     <div>
@@ -655,7 +609,7 @@ const Booking = () => {
                                   booking.departurePoints[0].time.slice(5, 7) +
                                   "/" +
                                   booking.departurePoints[0].time.slice(0, 4)
-                                  }
+                                }
                               </div>
                               <div class="place">
                                 • {booking.departureProvince}
@@ -703,7 +657,7 @@ const Booking = () => {
                         >
                           <div style={{ fontWeight: "600", color: "#2474E5" }}
                             onClick={() => {
-                              // handleShowRating(booking.id);
+                              handleShowRating(booking.id);
                               // const fetchComment = async (id) => {
                               //   const comment1 = await getCommentById(id);
                               //   setComments(comment1);
@@ -716,21 +670,7 @@ const Booking = () => {
                           <button
                             className={`${styles.buttons} ${styles.orderButton}`}
                             onClick={(event) => {
-                              handleBookTicket(booking.id);
-                              // const fetchTicket = async (tripid1) => {
-                              //   const ticket1 = await getTicketbyTripid(
-                              //     tripid1
-                              //   );
-                              //   setTicket(ticket1);
-                              //   sessionStorage.setItem(
-                              //     "ticket",
-                              //     JSON.stringify(ticket1)
-                              //   );
-                              //   // console.log(tickets);
-                              // };
-
-                              // fetchTicket(booking.trip.tripid);
-                              // console.log("vé xe:", tickets);
+                              handleBookTicket(booking);
                             }}
                           >
                             Đặt vé
@@ -739,84 +679,15 @@ const Booking = () => {
                         </div>
                       </div>
                     </div>
-
-                    <div className="info">
-                      <strong>Nhà xe:</strong> {booking.provider} <br />
-                      <strong>Giờ đi:</strong>{/*{booking.trip.starttime}*/} <br />
-                      <strong>Giờ đón:</strong>{/*{booking.trip.endtime}*/} <br />
-                      <strong>Giá vé:</strong> {booking.price} <br />
-                      <strong>Đánh giá:</strong>{" "}
-                      {/* {ratings[booking.admin.adminid]} sao */}
-                      <br />
-                      <button
-                        className="button"
-                        // onClick={(event) => {
-                        //   handleBookTicket(event, booking, booking.trip.tripid);
-                        //   const fetchTicket = async (tripid1) => {
-                        //     const ticket1 = await getTicketbyTripid(tripid1);
-                        //     setTicket(ticket1);
-                        //     sessionStorage.setItem(
-                        //       "ticket",
-                        //       JSON.stringify(ticket1)
-                        //     );
-                        //     // console.log(tickets);
-                        //   };
-
-                        //   fetchTicket(booking.trip.tripid);
-                        //   // console.log("vé xe:", tickets);
-                        // }}
-                      >
-                        Chọn chuyến
-                      </button>
-                      <button
-                        onClick={() => {
-                          // handleShowRating(booking.trip.tripid);
-                          // const fetchComment = async (adminid1) => {
-                          //   const comment1 = await getCommentById(adminid1);
-                          //   setComments(comment1);
-                          // };
-                          // fetchComment(booking.admin.adminid);
-                          // console.log("comment: ", comments);
-                        }}
-                      >
-                        Xem đánh giá về nhà xe
-                      </button>
-                      
-                    </div>
                   </div>
                   {showPickSeat === booking.id && (
                     <div>
                       <div className="show1">
                         <p>Còn {booking.availableSeatCount} chỗ</p>
-                        <p>Chọn ghế:</p>
-                        {/* {renderSeatNumbers(booking).map((number) => (
-                          <div key={number}>
-                            <input
-                              type="checkbox"
-                              disabled={handledDisable(number)}
-                              id={`seat-${number}`}
-                              value={number}
-                              onClick={(event) => {
-                                console.log(event.target.value);
-                                setSeat(event.target.value);
-                              }}
-                            />
-                            <label htmlFor={`seat-${number}`}>
-                              Ghế {number}
-                            </label>
-                          </div>
-                        ))} */}
-
-                        {/* <button
-                          className="button"
-                          onClick={(event) =>
-                            handlePick(event, booking, booking.trip.tripid)
-                          }
-                        >
-                          Tiếp tục
-                        </button> */}
+                        <input id="seatCountInput" placeholder="Số chỗ muốn đặt" onChange={handleSeatCountChange} type="number" min={1} max={currentBooking ? currentBooking.availableSeatCount : 1}></input>
+                        <p>Giá vé {currentBookingPrice} VND</p>
                       </div>
-                      {showLocation === booking.trip.tripid && (
+                      {(
                         <div className="show2">
                           <div>
                             <p>Điểm đón</p>
@@ -830,15 +701,11 @@ const Booking = () => {
                                     label="Điểm đón"
                                     onChange={(event) => {
                                       handlePickupPointChange(event);
-                                      console.log(
-                                        typeof event.target.value
-                                        // `Giá trị được chọn: ${event.target.value}`
-                                      );
                                     }}
                                   >
-                                    {booking.pickAddress.map((pick) => (
-                                      <MenuItem value={pick.pickname}>
-                                        {pick.pickname}
+                                    {booking.departurePoints.map((pick) => (
+                                      <MenuItem value={pick.id}>
+                                        {pick.name}
                                       </MenuItem>
                                     ))}
                                   </Select>
@@ -860,14 +727,11 @@ const Booking = () => {
                                     label="Điểm trả"
                                     onChange={(event) => {
                                       handleDropOffPointChange(event);
-                                      // console.log(
-                                      //   `Giá trị được chọn: ${event.target.value}`
-                                      // );
                                     }}
                                   >
-                                    {booking.returnAddress.map((dropoff) => (
-                                      <MenuItem value={dropoff.returnaddress}>
-                                        {dropoff.returnaddress}
+                                    {booking.arrivalPoints.map((pick) => (
+                                      <MenuItem value={pick.name}>
+                                        {pick.name}
                                       </MenuItem>
                                     ))}
                                   </Select>
@@ -875,34 +739,41 @@ const Booking = () => {
                               </Box>
                             </div>
                           </div>
-                          <Link to={"/payment"}>
-                            <button
-                              className="button"
-                              onClick={() => {
-                                postData();
-                              }}
-                            >
-                              Tiếp tục
-                            </button>
-                          </Link>
+                          {/* <Link to={"/payment"}> */}
+                          <button
+                            className="button"
+                            onClick={() => {
+                              postData();
+                            }}
+                          >
+                            Tiếp tục
+                          </button>
+                          {/* </Link> */}
                         </div>
                       )}
                     </div>
                   )}
 
-                      {showRating === booking.id && (
-                            <div className="showrating">
-                              <div>
-                                {comments.map((comment) => (
-                                  <div key={comment.id}>
-                                    <li>Người dùng: {comment.user.name}</li>
-                                    <li>Bình luận: {comment.content}</li>
-                                    {/* Add more comment details if needed */}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                  {showRating === booking.id && (
+                    <div className="showrating">
+                      <div className="addRating">
+                        <input id="CMTinput" className="comment" onChange={(event) => {
+                          handleCMTChange(event);
+                        }}></input>
+                        <button className="addButton" onClick={() => { handleAddReview() }}>Thêm</button>
+                      </div>
+                      <div>
+                        {ratings.map((review) => (
+                          <div key={review.id}>
+                            <li>Người dùng: {review.user}</li>
+                            <li>Bình luận: {review.comment}</li>
+                            {/* Add more comment details if needed */}
+                          </div>
+                        ))}
+                      </div>
+
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

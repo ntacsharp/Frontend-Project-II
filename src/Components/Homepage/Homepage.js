@@ -65,6 +65,7 @@ const Homepage = () => {
           departureTime: date,
         }
       );
+      sessionStorage.setItem("date", date);
       // console.log(response.data);
       sessionStorage.setItem("filteredList", JSON.stringify(response.data.items));
       navigate("/booking");

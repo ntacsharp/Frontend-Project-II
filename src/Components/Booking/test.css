@@ -58,7 +58,14 @@
     width: 150px;
 }
 
-.show1,
+.show1 {
+    background-color: white;
+    width: 728px;
+    min-height: 50px;
+    display: block;
+    margin-bottom: 30px;
+}
+
 .show2 {
     background-color: white;
     width: 728px;
@@ -91,4 +98,23 @@
 
 .info{
     display: none;
+}
+
+.addRating{
+    width: 728px;
+    height: 30px;
+}
+
+.comment{
+    width: 658px;
+    height: 20px;
+}
+
+.addButton {
+    background-color: #ffd333;
+    border: none;
+    border-radius: 5%;
+    color: #484848;
+    width: 62px;
+    height: 26px;
 }
